@@ -1,0 +1,12 @@
+﻿<Window x:Class="WinServLite2.CloseableTab.ContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinServLite2.CloseableTab" Closing="Window_Closing"
+        mc:Ignorable="d"
+        Title="ContainerWindow" Icon="../Resources/rocket.ico" Height="584.877" Width="1045.232">
+    <Grid>
+
+    </Grid>
+</Window>

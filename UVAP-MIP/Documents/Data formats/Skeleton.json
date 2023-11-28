@@ -1,0 +1,12 @@
+[
+	{
+		"p": [
+			{
+				"x": uint,
+				"y": uint,
+				"t": string,
+				"c": float
+			}
+		]
+	}
+]

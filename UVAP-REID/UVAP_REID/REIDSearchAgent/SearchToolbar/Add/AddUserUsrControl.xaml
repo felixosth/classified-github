@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="REIDSearchAgent.SearchToolbar.Add.AddUserUsrControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:REIDSearchAgent.SearchToolbar.Add" xmlns:smartClient="clr-namespace:VideoOS.Platform.Client;assembly=VideoOS.Platform"
+             mc:Ignorable="d" Height="305.5" Width="916" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" HorizontalAlignment="Stretch">
+    <Border BorderThickness="1" BorderBrush="#FF838383">
+        <Grid>
+            <Label FontSize="18" Content="Key:" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="64"/>
+            <TextBox FontSize="18" x:Name="keyTxtBox" Height="30" Margin="100,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="217" TabIndex="1"/>
+            <Label FontSize="18" Content="Name:" HorizontalAlignment="Left" Margin="10,53,0,0" VerticalAlignment="Top" Width="64"/>
+            <TextBox FontSize="18" x:Name="nameTxtBox" Height="30" Margin="101,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="217" TabIndex="2"/>
+            <Grid Margin="337,10,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="171*"/>
+                    <RowDefinition Height="47*"/>
+                </Grid.RowDefinitions>
+                <smartClient:ImageViewerWpfControl x:Name="imageViewerControl" Grid.Row="0"/>
+                <smartClient:PlaybackWpfUserControl x:Name="playbackControl" Grid.Row="1" TabIndex="4"/>
+            </Grid>
+            <!--<Image x:Name="image" Margin="0,10,10,10" HorizontalAlignment="Right" Width="398"/>-->
+            <ComboBox x:Name="categoryComboBox" HorizontalAlignment="Left" Margin="101,96,0,0" VerticalAlignment="Top" Width="216" Height="30" TabIndex="3"/>
+            <Label FontSize="18" Content="Category:" HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" Width="86"/>
+        </Grid>
+    </Border>
+</UserControl>

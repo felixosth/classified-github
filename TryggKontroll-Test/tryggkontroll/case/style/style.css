@@ -1,0 +1,65 @@
+body
+{
+    text-align:center;
+    font-family: Arial;
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+}
+
+#buttonContainer
+{
+    margin-top:20px;
+}
+
+#alarmImage
+{
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+video
+{
+    width: 100%;
+    height: auto;
+}
+
+@media only screen and (min-device-width: 1300px) {
+    #alarmImage
+    {
+        max-width: 1280px;
+        max-height: 720px;
+    }
+
+    video
+    {
+        width: 70%;
+        height:auto;
+        max-height:80%;
+    }
+}
+
+.footer
+{
+    position: absolute;
+    color: rgb(165, 165, 165);
+    font-size: 80%;
+    font-family: Arial;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 1rem;
+    text-align: center;
+    width: 99%;
+}
+
+.content p
+{
+    margin-bottom: 8px;
+}
+
+.footer img
+{
+    width: 99px;
+    height: 43px;
+}

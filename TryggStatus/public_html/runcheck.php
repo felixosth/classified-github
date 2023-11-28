@@ -1,0 +1,1 @@
+<?php require "../scripts/check.php"; ?>

@@ -1,0 +1,52 @@
+﻿<Window x:Class="WinservLite.AddJob"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinservLite"
+        mc:Ignorable="d"
+        Title="Work-Adder-Z200" Height="359.661" Width="442.423" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="rocket big.ico" KeyDown="Window_KeyDown">
+    <Grid >
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="40,14,0,0" TextWrapping="Wrap" KeyUp="TextBox_KeyUp" PreviewKeyDown="textBox_KeyDown" VerticalAlignment="Top" Width="332" TabIndex="1"/>
+        <Button  x:Name="saveBtn" Content="Save" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Click="saveBtn_Click" TabIndex="7" Height="20" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="siteNoBox" Height="23" Margin="0,14,10,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="55"/>
+        <TextBox x:Name="descBox" Height="150" Margin="10,73,9,0" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" SpellCheck.IsEnabled="True" TabIndex="2" MaxLength="500"/>
+        <Label Content="Site" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Description:" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="refName" HorizontalAlignment="Left" Height="23" Margin="71,232,0,0" VerticalAlignment="Top" Width="145" TabIndex="3" MaxLength="60" MaxLines="1"/>
+        <Label Content="Refrence" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="refTel" Height="23" Margin="264,231,9,0" VerticalAlignment="Top" TabIndex="4" MaxLength="60" MaxLines="1"/>
+        <Label Content="Tel" HorizontalAlignment="Left" Margin="235,228,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="refEmail" Height="23" Margin="264,262,9,0" VerticalAlignment="Top" TabIndex="6" MaxLength="100" MaxLines="1"/>
+        <Label Content="Email" HorizontalAlignment="Left" Margin="221,258,0,0" VerticalAlignment="Top"/>
+        <ComboBox  x:Name="jobType" Margin="71,260,0,0" SelectedIndex="1" TabIndex="5" HorizontalAlignment="Left" Width="145" Height="22" VerticalAlignment="Top">
+            <ListBoxItem Content="Driftsättning"/>
+            <ListBoxItem Content="Fjärrsupport"/>
+            <ListBoxItem Content="Hosting tjänster"/>
+            <ListBoxItem Content="Installation"/>
+            <ListBoxItem Content="Jour"/>
+            <ListBoxItem Content="Planerat"/>
+            <ListBoxItem Content="Revision"/>
+            <ListBoxItem Content="Service"/>
+        </ComboBox>
+
+        <Label Content="Jobtype" HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top"/>
+        <ComboBox  x:Name="techBox" HorizontalAlignment="Left" Margin="71,287,0,0" VerticalAlignment="Top" Width="145" TabIndex="6">
+            <ListBoxItem Content="DEAH"/>
+            <ListBoxItem Content="FEOS"/>
+            <ListBoxItem Content="JELO"/>
+            <ListBoxItem Content="KRHE"/>
+            <ListBoxItem Content="LIOL"/>
+            <ListBoxItem Content="MATO"/>
+            <ListBoxItem Content="VIKLA"/>
+        </ComboBox>
+        <Label Content="Tech:" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top"/>
+        <Border Name="suggestionBorder" Visibility="Collapsed" BorderBrush="Black"   
+        BorderThickness="1" Margin="40,37,63,10">
+            <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Auto" Background="White">
+                <StackPanel Name="resultStack"></StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

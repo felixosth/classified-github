@@ -1,0 +1,148 @@
+﻿<closeabletab:DynamicUserControl
+    xmlns:closeabletab="clr-namespace:WinServLite2.CloseableTab" x:Class="WinServLite2.JobViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WinServLite2"
+             xmlns:job="clr-namespace:WinServLite2.Jobs"
+             d:DesignWidth="1500" d:DesignHeight="900"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+             KeyDown="UserControl_KeyDown"
+             mc:Ignorable="d">
+    <TabControl Margin="4">
+        <TabItem>
+            <Grid >
+                <ListView x:Name="reportListView" Margin="10,222,10,10" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="auto">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Click="SortByColumns" Tag="Comment">
+                                        Kommentar
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding Comment}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Date, StringFormat={}{0:dd/MM/yyyy}}" Width="80">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Click="SortByColumns" Tag="Date">
+                                        Datum
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding WorkTime, StringFormat={}{0}h}" Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Click="SortByColumns" Tag="WorkTime">
+                                        Arbtid
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding TravelTime, StringFormat={}{0}h}" Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Click="SortByColumns" Tag="TravelTime">
+                                        Restid
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Jobbtidstyp" DisplayMemberBinding="{Binding JobTimeTypeName}" Width="80"/>
+                            <GridViewColumn Header="Åtgärder" Width="60">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="editReportBtn" MouseDown="EditReportBtn_MouseDown"/>
+                                            <Image Source="Resources/delete.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="deleteReportBtn" MouseDown="DeleteReportBtn_MouseDown" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontWeight="Normal" FontSize="14" Foreground="DodgerBlue" Text="{Binding Name}" Margin="3,0,0,0">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect BlurRadius="0" ShadowDepth="1" Direction="225" Color="#FF3C3C3C"/>
+                                        </TextBlock.Effect></TextBlock>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListBoxItem/>
+                </ListView>
+
+                <TextBlock x:Name="siteNameLabel" Margin="10,10,964,0" VerticalAlignment="Top" Height="39" FontSize="20" Foreground="#FFA4A1A1" FontWeight="Bold" TextDecorations="{x:Null}">
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="1.9" Direction="225" ShadowDepth="1.5"/>
+                    </TextBlock.Effect><Run Text="SiteName"/><Run Text=" Which Is Very Long I Almost Cant See It"/></TextBlock>
+                <Image Name="bookmarkJobImg" MouseDown="BookmarkJobImg_MouseDown" Height="32" Width="32" Source="Resources/unstar.png" Margin="887,10,10,235" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+                <TextBox  Margin="10,49,0,0" Height="143" VerticalAlignment="Top" HorizontalAlignment="Left" Width="512" x:Name="descriptionText" Text="description" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <Button  x:Name="addTimeBtn" Margin="10,197,0,0" VerticalAlignment="Top" Click="AddTimeBtn_Click" HorizontalAlignment="Left" Width="119">
+                    <DockPanel LastChildFill="True">
+                        <Image Stretch="Fill" Width="14" Height="14" Source="Resources/plus.png" Margin="0,0,7,0"/>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center">Lägg till rapport</TextBlock>
+                    </DockPanel>
+                </Button>
+                <Label Content="Referens:" HorizontalAlignment="Left" Margin="757,54,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="refName" Text="Name" HorizontalAlignment="Left" Height="26" Margin="822,54,0,0" VerticalAlignment="Top" Width="225" MaxLines="1" MaxLength="60"/>
+                <TextBox x:Name="refTel" Text="Tel" HorizontalAlignment="Left" Height="26" Margin="822,85,0,0" VerticalAlignment="Top" Width="225" MaxLines="60" MaxLength="60"/>
+                <TextBox x:Name="refEmail" Text="Email"  HorizontalAlignment="Left" Height="26" Margin="822,116,0,0" VerticalAlignment="Top" Width="225" MaxLength="60"/>
+                <Label Content="Tel:" HorizontalAlignment="Left" Margin="762,85,0,0" VerticalAlignment="Top" Width="55"/>
+                <Label Content="Epost:" HorizontalAlignment="Left" Margin="762,116,0,0" VerticalAlignment="Top" Width="55"/>
+                <Button Content="Dela jobb" HorizontalAlignment="Left" Margin="447,197,0,0" VerticalAlignment="Top" Width="75" Click="ShareJobBtn_Click"/>
+                <Label x:Name="timeLabel" Content="Time summary: 0h (0h travel)" HorizontalAlignment="Left" Margin="134,194,0,0" VerticalAlignment="Top" Width="264"/>
+                <Label Content="Adress:" HorizontalAlignment="Left" Margin="762,147,0,0" VerticalAlignment="Top" Width="55" Height="23"/>
+                <TextBox x:Name="addressTxtBox" HorizontalAlignment="Left" Height="23" Margin="822,147,0,0" VerticalAlignment="Top" Width="225" Text="Address" IsReadOnly="True"/>
+                <Image Source="Resources/copy.png" ToolTip="Kopiera" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" x:Name="copyAddressBtn" MouseDown="CopyAddressBtn_MouseDown" Margin="1049,151,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox x:Name="jobStatusComboBox" HorizontalAlignment="Left" Margin="822,175,0,0" VerticalAlignment="Top" Width="225" Height="26"/>
+                <Label Content="Status:" HorizontalAlignment="Left" Margin="762,175,0,0" VerticalAlignment="Top" Width="55" Height="23"/>
+                <Button x:Name="excelExportBtn" Content="Exportera som Excel" HorizontalAlignment="Right" Margin="0,197,10,0" VerticalAlignment="Top" Width="124" Click="excelExportBtn_Click"/>
+                <Button x:Name="plannerBtn" Content="Öppna i Planner" HorizontalAlignment="Left" Margin="642,197,0,0" VerticalAlignment="Top" Width="110" Click="plannerBtn_Click"/>
+
+                <Label x:Name="initCallBtn" HorizontalAlignment="Left" Margin="1047,85,0,0" VerticalAlignment="Top" Width="95">
+                    <Hyperlink x:Name="initCallHyperLink" NavigateUri="tel:" RequestNavigate="initCallHyperLink_RequestNavigate">Starta samtal</Hyperlink>
+                </Label>
+                <Label x:Name="initEmailBtn" HorizontalAlignment="Left" Margin="1047,116,0,0" VerticalAlignment="Top" Width="95">
+                    <Hyperlink x:Name="initEmailHyperLink" NavigateUri="email:" RequestNavigate="initEmailHyperLink_RequestNavigate">Skicka E-post</Hyperlink>
+                </Label>
+
+
+                <Border HorizontalAlignment="Left" Height="143" Margin="527,49,0,0" VerticalAlignment="Top" Width="225" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                    <Grid>
+                        <Label Content="Planner tasks:" Margin="0,0,0,117"/>
+
+                        <ListView x:Name="plannerChecklistListView" Margin="0,24,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="Transparent">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding isChecked}" Content="{Binding title}" Checked="PlannerTaskCheckBox_Checked" Unchecked="PlannerTaskCheckBox_Checked" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </Grid>
+            <TabItem.Header>
+                <DockPanel>
+                    <Image Width="16" Height="16" Source="Resources/checklist.png"/>
+                    <Label Content="Jobb"/>
+                </DockPanel>
+            </TabItem.Header>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <DockPanel>
+                    <Image Width="16" Height="16" Source="Resources/box.png"/>
+                    <Label Content="Artiklar"/>
+                </DockPanel>
+            </TabItem.Header>
+            <job:ArticleManager x:Name="articleManager"/>
+        </TabItem>
+    </TabControl>
+</closeabletab:DynamicUserControl>

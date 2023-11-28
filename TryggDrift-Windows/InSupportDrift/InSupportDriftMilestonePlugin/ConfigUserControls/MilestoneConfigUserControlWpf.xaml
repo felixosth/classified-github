@@ -1,0 +1,32 @@
+﻿<drift:BasePluginConfigWpf x:Class="InSupportDriftMilestonePlugin.MilestoneConfigUserControlWpf"
+             xmlns:drift="clr-namespace:InSupport.Drift.Plugins.Wpf;assembly=InSupportDrift"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:InSupportDriftMilestonePlugin"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400">
+    <Grid>
+        <Label Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Height="23" Margin="10,36,10,0" TextWrapping="Wrap" Text="http://localhost" VerticalAlignment="Top"/>
+        <Label Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="serverTxtBox" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" Text="http://localhost" VerticalAlignment="Top"/>
+        <CheckBox x:Name="sendAlarmsChkBox" Content="Send alarms to TryggDrift" HorizontalAlignment="Left" Margin="12,254,0,0" VerticalAlignment="Top"/>
+        <Border BorderBrush="Black" BorderThickness="1" Height="153" Margin="10,64,10,0" VerticalAlignment="Top" IsEnabled="{Binding IsChecked, ElementName=basicAuthRadio}">
+            <Grid>
+                <Label Content="Username" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="basicUsernameTxtBox" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                <Label Content="Password" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top"/>
+                <PasswordBox x:Name="basicPwdBox" Height="23" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" Width="358"/>
+                <Button x:Name="testMilestoneBtn" Content="Test connection" VerticalAlignment="Top" HorizontalAlignment="Left" Height="23" Margin="10,115,0,0" Click="TestMilestoneConnection"/>
+            </Grid>
+        </Border>
+        <RadioButton Content="Basic authentication" x:Name="basicAuthRadio" HorizontalAlignment="Left" Margin="12,234,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content="Windows authentication" x:Name="windowsAuthRadio" HorizontalAlignment="Left" IsChecked="True" Margin="166,234,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="excludeSequencesChkBox" Content="Exclude last 24h recorded sequences" HorizontalAlignment="Left" Margin="12,274,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="configureEventsBtn" Content="Configure events" HorizontalAlignment="Left" Margin="12,294,0,0" VerticalAlignment="Top" Width="125" Click="configureEventsBtn_Click"/>
+        <Button x:Name="configureMQTTBtn" Content="Configure MQTT" HorizontalAlignment="Left" Margin="12,319,0,0" VerticalAlignment="Top" Width="125" Click="configureMQTTBtn_Click"/>
+
+    </Grid>
+</drift:BasePluginConfigWpf>

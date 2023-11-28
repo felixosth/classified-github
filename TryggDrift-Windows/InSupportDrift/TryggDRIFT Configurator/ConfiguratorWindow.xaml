@@ -1,0 +1,63 @@
+﻿<Window x:Class="TryggDRIFT_Configurator.ConfiguratorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TryggDRIFT_Configurator"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="TryggDRIFT Configurator" Height="532" Width="641.177" Loaded="Window_Loaded" Closing="Window_Closing" Icon="Resources/dashboard.ico">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+    <Grid>
+        <Label Content="TryggDRIFT URL:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="serverUrlTxtBox" HorizontalAlignment="Left" Margin="110,14,0,0" Text="https://drift.tryggconnect.se" TextWrapping="Wrap" VerticalAlignment="Top" Width="183" TextChanged="serverUrlTxtBox_TextChanged"/>
+        <ListView x:Name="packagesListView" Margin="10,41,10,56">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="150" Header="Package" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Width="50" Header="Version" DisplayMemberBinding="{Binding Version}"/>
+                    <GridViewColumn Width="50" Header="Install">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="5, 0" IsEnabled="{Binding NotMandatory}" IsChecked="{Binding IsChecked}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" Header="Status" DisplayMemberBinding="{Binding Status}"/>
+                    <GridViewColumn Width="100" Header="Local version" DisplayMemberBinding="{Binding InstalledVersion}"/>
+                    <GridViewColumn Width="50" Header="Update">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Margin="5, 0" IsEnabled="{Binding UpdateAvailable}" IsChecked="{Binding DoUpdate}"/>
+                                    <TextBlock Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolToVis}}" Text="‼" Foreground="Red" Background="Transparent" ToolTip="Update available"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" Header="Config">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="⚙" IsEnabled="{Binding CanConfigure}" Click="ConfigButton_Click"/>
+                                    <TextBlock VerticalAlignment="Center" Visibility="{Binding NotConfigured, Converter={StaticResource BoolToVis}}" Text="‼" Foreground="Red" Background="Transparent" ToolTip="No configuration found"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="refreshBtn" Content="Refresh" HorizontalAlignment="Left" Margin="298,13,0,0" VerticalAlignment="Top" Width="55" Click="refreshBtn_Click"/>
+        <Button x:Name="installBtn" Content="Modify packages" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="installBtn_Click"/>
+        <Label Content="Service status:" HorizontalAlignment="Left" Margin="10,0,0,30" VerticalAlignment="Bottom"/>
+        <Label x:Name="serviceStatusLabel" Foreground="Gray" Content="Status" HorizontalAlignment="Left" Margin="94,0,0,30" VerticalAlignment="Bottom"/>
+        <Button x:Name="installServiceBtn" IsEnabled="False" Content="Install service" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="104" Click="installServiceBtn_Click"/>
+        <Button x:Name="stopServiceBtn" Content="Stop service" HorizontalAlignment="Left" Margin="218,0,0,10" VerticalAlignment="Bottom" Width="75" Click="stopServiceBtn_Click" IsEnabled="False"/>
+        <Button x:Name="startServiceBtn" Content="Start service" HorizontalAlignment="Left" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="75" Click="startServiceBtn_Click" IsEnabled="False"/>
+        <Button x:Name="scanPluginsBtn" Content="Scan for local plugins" HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Width="130" Click="scanPluginsBtn_Click"/>
+        <Button x:Name="logBtn" Content="Service log" HorizontalAlignment="Left" Margin="316,0,0,10" VerticalAlignment="Bottom" Width="89" Click="logBtn_Click"/>
+
+    </Grid>
+</Window>

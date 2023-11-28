@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="InSupport Nätverksvideo AB">
+
+    <title>TryggSTORE - Settings</title>
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">TryggSTORE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/status.html">Status</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/settings.html">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/network.html">Network</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h3>Settings</h3>
+        <div class="form-group">
+            <label class="stop-ico" for="thresholdInput">Max people threshold</label>
+            <input name="thresholdInput" type="text" id="max-threshold" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="warning-ico" for="thresholdInput">Close to max people threshold</label>
+            <input name="thresholdInput" type="text" id="close-threshold" class="form-control" />
+        </div>
+
+        <a id="show-cam-settings" href="#cam-settings" data-toggle="collapse" aria-target="#cam-settings" class="gear-ico">Show advanced settings</a>
+
+        <div id="cam-settings" class="collapse">
+            <div class="form-group">
+                <label for="siteNameInput">Site name</label>
+                <input name="siteNameInput" type="text" id="siteName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="ipInput">Occupancy camera IP</label>
+                <input name="ipInput" type="text" id="ip" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="userInput">Camera username</label>
+                <input name="userInput" type="text" id="user" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="passInput">Camera password</label>
+                <input name="passInput" type="password" id="pass" class="form-control" />
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary float-right" id="saveBtn">💾 Save settings</button>
+
+        <div class="stream-div">
+            <label class="tv-ico" for="stream-img">Stream</label>
+            <img id="stream-img" style="-webkit-user-select: none;" src="/stream.mjpeg">
+        </div>
+    </div>
+
+
+    <footer class="text-muted">
+        <div class="container">
+            <p>&copy; InSupport Nätverksvideo AB - 2021</p>
+        </div>
+    </footer>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#show-cam-settings").click(function () {
+                $(this).remove();
+            });
+
+            $.get('/api?action=getData', function (settings) {
+                // console.log(settings);
+
+                //if (Object.keys(settings).length == 0) {
+                //    settings = { "user": "root", "pass": "pass", "ip": "192.168.0.90", "port": 80, "threshold": 1 };
+                //}
+
+                $("#ip").val(settings.OccupancyCameraIP);
+                $("#siteName").val(settings.SiteName ?? "");
+                //$("#port").val(settings.port);
+                $("#user").val(settings.OccupancyCameraUsername);
+                $("#pass").val(settings.OccupancyCameraPassword);
+                $("#max-threshold").val(settings.MaxOccupancyThreshold);
+                $("#close-threshold").val(settings.CloseOccupancyThreshold);
+                //$("#people-left-checkbox").val(settings.showPeopleLeft);
+                //$("#background-checkbox").prop("checked", settings.staticBackground);
+            });
+
+            $("#saveBtn").click(function () {
+
+                var settings = {
+                    "OccupancyCameraIP": $("#ip").val(),
+                    "SiteName": $("#siteName").val(),
+                    "OccupancyCameraUsername": $("#user").val(),
+                    "OccupancyCameraPassword": $("#pass").val(),
+                    "MaxOccupancyThreshold": $("#max-threshold").val(),
+                    "CloseOccupancyThreshold": $("#close-threshold").val()
+                };
+                console.log(settings);
+
+                $.post('/api?action=setData', JSON.stringify(settings), function (data) {
+                    if (data.success === true)
+                        alert("Settings saved");
+                    else
+                        alert("Something went wrong!\r\n\r\n" + data.error);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

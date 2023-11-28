@@ -1,0 +1,1 @@
+﻿start http://127.0.0.1:1266/settings.html

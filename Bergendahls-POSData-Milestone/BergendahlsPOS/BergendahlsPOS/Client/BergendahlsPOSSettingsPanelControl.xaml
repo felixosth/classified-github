@@ -1,0 +1,22 @@
+<UserControl x:Class="BergendahlsPOS.Client.BergendahlsPOSSettingsPanelControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BergendahlsPOS.Client"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400">
+    <Grid>
+        <Label Grid.Column="0" Content="ButiksID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,6,0,0" Width="91"/>
+        <TextBox x:Name="storeIdTextBox" Height="23" TextWrapping="Wrap" TextChanged="TextBox_TextChanged" Margin="106,10,0,0" HorizontalAlignment="Left" Width="135" VerticalAlignment="Top"/>
+        <Label Grid.Column="0" Content="Kassakameror" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,38,0,0" Width="91"/>
+        <ListBox x:Name="camerasListBox" Margin="106,38,10,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

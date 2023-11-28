@@ -1,0 +1,67 @@
+.alarm-slider {
+    width: 280px;
+    height: 50;
+
+    /* set the wrapper as the anchor element for positioning */
+    position: relative;
+    margin: auto;
+}
+
+.alarm-slider input {
+    -webkit-appearance: none;
+    width: 100%;
+    background: #ddd;
+    padding: 3px;
+    border: 1px solid #525252;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+input[type='range']:focus 
+{
+    outline: none;
+}
+
+.alarm-slider input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+
+    /* position the button on top of everything */
+    z-index: 100;
+    position: relative;
+
+    width: 50;
+    height: 38px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
+    /* arrow and button gradient */
+    background-image: url('alarm.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
+.alarm-slider span {
+    /* position the text just under the button in the stacking order */
+    position: absolute;
+    z-index: 99;
+    top: 15%;
+    left: 25%;
+
+    font-family: "Helvetica Neue", Helvetica, sans;
+    font-size: 24px;
+    color: rgba(255, 0, 0, 0.5);
+    cursor: default;
+    -webkit-user-select: none;
+
+    /* semitransparent gradient mask to animate over the text */
+}
+
+.hide-slider-thumb input::-webkit-slider-thumb
+{
+    background: none !important;
+}
+
+
+/* animate the webkit-mark over the text */

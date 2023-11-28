@@ -1,0 +1,11 @@
+[
+    { // Head detection object
+        "b": { 
+            "x": uint,
+			"y": uint,
+			"w": uint,
+			"h": uint
+        },
+		"c": float
+    }
+]

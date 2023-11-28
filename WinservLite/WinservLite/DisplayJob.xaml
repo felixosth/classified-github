@@ -1,0 +1,94 @@
+﻿<Window x:Class="WinservLite.DisplayJob"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinservLite"
+        mc:Ignorable="d"
+        Title="Job-Viewer-P600" Height="509.094" Width="956.077" WindowStartupLocation="CenterOwner" Icon="rocket big.ico" Closing="Window_Closing" KeyDown="Window_KeyDown">
+    <Grid >
+        <ListView x:Name="reportListView" Margin="10,222,10,10" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Comment" Width="auto">
+                        <!--<GridViewColumn Header="Comment" Width="600">-->
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Comment}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="80" Header="Date"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding WorkTime, StringFormat={}{0}h}" Width="60" Header="Work"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding TravelTime, StringFormat={}{0}h}" Width="60" Header="Travel"/>
+                    <GridViewColumn Header="Actions" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="editReportBtn" MouseDown="editReportBtn_MouseDown"/>
+                                    <Image Source="Resources/delete.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="deleteReportBtn" MouseDown="deleteReportBtn_MouseDown" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Normal" FontSize="14" Foreground="DodgerBlue" Text="{Binding Name}" Margin="3,0,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" Direction="225" Color="#FF3C3C3C"/>
+                                </TextBlock.Effect></TextBlock>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+            <ListBoxItem/>
+        </ListView>
+
+        <DockPanel Margin="10,10,10,0" Height="39" VerticalAlignment="Top">
+            <TextBlock x:Name="siteNameLabel" Text="SiteName" VerticalAlignment="Top" Height="39" FontSize="20" Foreground="#FFA4A1A1" FontWeight="Bold" TextDecorations="{x:Null}" Width="888">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="1.9" Direction="225" ShadowDepth="1.5"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <Image Name="bookmarkJobImg" MouseDown="bookmarkJobImg_MouseDown" Height="32" Width="32" Source="Resources/unstar.png"/>
+        </DockPanel>
+
+        <Grid Margin="10,49,0,0" Height="143" VerticalAlignment="Top" HorizontalAlignment="Left" Width="664">
+            <TextBox x:Name="descriptionText" Text="description" TextWrapping="Wrap" IsReadOnly="True" AcceptsReturn="True"/>
+            <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="editDescriptionBtn" MouseDown="editDescriptionBtn_MouseDown_edit" Margin="0,125,2,2" HorizontalAlignment="Right"/>
+        </Grid>
+        <Button  x:Name="addTimeBtn" Margin="10,197,0,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Left" Width="119">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="14" Height="14" Source="Resources/plus.png" Margin="0,0,7,0"/>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center">Add new report</TextBlock>
+            </DockPanel>
+        </Button>
+        <Button  x:Name="addArtBtn" Margin="134,197,0,0" VerticalAlignment="Top" Click="addArtBtn_Click" HorizontalAlignment="Left" Width="101">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="14" Height="14" Source="Resources/box.png" Margin="0,0,7,0"/>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Articles.."/>
+            </DockPanel>
+        </Button>
+        <Label Content="Reference:" HorizontalAlignment="Left" Margin="674,49,0,0" VerticalAlignment="Top"/>
+        <TextBox IsReadOnly="True" x:Name="refName" Text="Name" HorizontalAlignment="Left" Height="26" Margin="739,49,0,0" VerticalAlignment="Top" Width="172" MaxLines="1" MaxLength="60"/>
+        <TextBox IsReadOnly="True" x:Name="refTel" Text="Tel" HorizontalAlignment="Left" Height="26" Margin="739,80,0,0" VerticalAlignment="Top" Width="172" MaxLines="60" MaxLength="60"/>
+        <TextBox IsReadOnly="True" x:Name="refEmail" Text="Email"  HorizontalAlignment="Left" Height="26" Margin="739,111,0,0" VerticalAlignment="Top" Width="172" MaxLength="60"/>
+        <Label Content="Tel:" HorizontalAlignment="Left" Margin="679,80,0,0" VerticalAlignment="Top" Width="55"/>
+        <Label Content="Email:" HorizontalAlignment="Left" Margin="679,111,0,0" VerticalAlignment="Top" Width="55"/>
+        <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" x:Name="editRefNameBtn" MouseDown="editRefNameBtn_MouseDown" Margin="913,55,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" x:Name="editRefTelBtn" MouseDown="editRefTelBtn_MouseDown" Margin="913,86,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" x:Name="editRefEmailBtn" MouseDown="editRefEmailBtn_MouseDown" Margin="913,117,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Share Job" HorizontalAlignment="Left" Margin="599,197,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <CheckBox x:Name="jobCompletedChkBox" Content="Utfört" HorizontalAlignment="Left" Margin="679,200,0,0" VerticalAlignment="Top" Width="172"/>
+        <Label x:Name="timeLabel" Content="Time summary: 0h (0h travel)" HorizontalAlignment="Left" Margin="240,194,0,0" VerticalAlignment="Top" Width="354"/>
+        <Label Content="Address:" HorizontalAlignment="Left" Margin="679,142,0,0" VerticalAlignment="Top" Width="55" Height="23"/>
+        <TextBox x:Name="addressTxtBox" HorizontalAlignment="Left" Height="23" Margin="739,142,0,0" VerticalAlignment="Top" Width="172" Text="Address" IsReadOnly="True"/>
+        <Image Source="Resources/copy.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" x:Name="copyAddressBtn" MouseDown="copyAddressBtn_MouseDown" Margin="913,146,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <!--<Button x:Name="addTimeBtn" Content="+" Margin="10,160,831,276" Click="Button_Click"/>-->
+
+    </Grid>
+</Window>

@@ -1,0 +1,50 @@
+﻿Ideas:
+ - Post-it funktion; Nästa gång Smart Klienten öppnas så öppnas det ett "brev" så användaren ser vad som har tex gjorts via fjärr när denne var borta
+ - Bookmars till kamerainloggningar för tex restarten
+
+Upcoming:
+ control panel för avancerad användning
+
+1.37
+ - Avancerad status-meny för problemsökning
+
+1.36
+ - Kontrollpanel för avancerad användning (Mest InSupport tekniker)
+ - PluginUpdater uppdaterar ur en zip istället för en specifik fil
+
+﻿1.351
+- Ny färg på logotyp som anpassar sig efter temat
+- Små fixar till nyhetsflödet
+
+1.35
+- Ny design som anpassar sig till Smart Clienten
+- Ändrade nyhetsflödet så den anpassar temat med klienten
+
+1.341
+- Layoutjustering och ny text på vissa element
+
+1.34
+ - Ny mailklient som går via vår egna mailserver istället för Loopias
+ - Layoutjusteringar och skalbar klient
+
+1.331
+ - Ny logotyp
+
+1.33
+ - UI Redesign
+ - Ruta för internettid
+ - La till så man ser sin Externa IP adress i Info-rutan	
+ - La till text för kritisk information, uppdateras dock ej än
+
+1.32
+ - Tidig version av nyhetsflöde
+
+1.311
+ - Text fix på "Vill du uppdatera" dialogen
+
+1.31
+ - Problemlösaren har nu en WebBrowser komponent så man kan style'a FAQs.
+ - Uppdaterade FAQ.
+
+1.3
+ - Självuppdatering funkar nu

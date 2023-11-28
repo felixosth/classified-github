@@ -1,0 +1,11 @@
+Kamera som strular?|
+<p>Det kan vara så att det bara behövs en omstart av <span style="color: blue;">Smart Klienten</span>. Logga in och ut eller starta om programmet. Om detta inte hjälper, <a href="http://trygghetscenter.se/" target="_blank">kontakta oss.</a></p>
+|Dålig prestanda/Smart Klienten krashar?|
+<p>Kom ihåg att Axis Dewarping Pluginet (vyer som bara har 1 360 kamera i) drar mycket prestanda. Det är en dålig idé att ha mer än 1 sådan kamera i en vy.</p>
+|Innan du felanmäler|
+<p>Se till att du vet vilken/vilka kameror/switchar som är trasiga samt om du använder en klient eller server osv, så vi vet var vi ska leta.</p>
+|Videoutbildning|
+<p><a href="https://youtu.be/-fUpjW7TT78" target="_blank">XProtect Smart Client: View video on the Live tab</p>
+<p><a href="https://youtu.be/BlhiQ6deQvE" target="_blank">XProtect Smart Client: View recorded video on the Playback tab</p>
+<p><a href="https://youtu.be/KhfQ6zPbdFI" target="_blank">XProtect Smart Client 2014: Export evidence</p>
+<p><a href="https://youtu.be/lmW9AldOusU" target="_blank">XProtect Smart Client: Create and modify views</p>

@@ -1,0 +1,28 @@
+Ubuntu (fnugg-gpu-server).
+insupport
+Camera20!
+IPMI: ADMIN Camera20!
+
+Node-red (port 1880):
+insupport
+Camera20!
+
+settings.js är i /var/lib/docker/volumes/node_red_data/_data
+För att skapa nya användare
+https://www.browserling.com/tools/bcrypt
+
+
+
+All logik hanteras i node-red https://fnugg-gpu-server:1880/
+http://www.steves-internet-guide.com/securing-node-red-ssl/
+
+API exponeras på https://fnugg-gpu-server:1880/api
+Nginx reverse proxy går till API
+http://fnugg-gpu-server/
+
+Nginx config: /etc/nginx/sites-available/reverse-proxy.conf
+https://www.hostinger.com/tutorials/how-to-set-up-nginx-reverse-proxy/
+
+
+Kafka (Confluent-Community-2.12)
+https://docs.confluent.io/5.5.2/installation/installing_cp/deb-ubuntu.html

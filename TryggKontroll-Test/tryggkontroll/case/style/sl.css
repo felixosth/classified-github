@@ -1,0 +1,64 @@
+input[type='range']:focus 
+{
+    outline: none;
+}
+
+::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 50px;
+    height: 38px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-image: url('alarm.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
+input[type='range']
+{
+    -webkit-appearance: none;
+    width: 280px;
+    height: 50px;
+    padding: 3px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 1px solid red;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, white),
+        color-stop(1, white)
+    );
+}
+
+.slider span {
+    /* position the text just under the button in the stacking order */
+    position: absolute;
+    z-index: 99;
+    top: 30%;
+    left: 37%;
+
+    font-family: "Helvetica Neue", Helvetica, sans;
+    font-size: 24px;
+    color: red;
+    cursor: default;
+    -webkit-user-select: none;
+
+    /* semitransparent gradient mask to animate over the text */
+    -webkit-mask-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0, rgba(0,0,0,0.3)),
+        color-stop(0.45, rgba(0,0,0,0.3)),
+        color-stop(0.5, rgba(0,0,0,1)),
+        color-stop(0.55, rgba(0,0,0,0.3)),
+        color-stop(1, rgba(0,0,0,0.3))
+    );
+    -webkit-mask-size: 1000px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation: text-spotlight 4s infinite;
+}

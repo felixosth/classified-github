@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="TryggSupport.ContactForm.ContactFormUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TryggSupport.ContactForm"
+             mc:Ignorable="d" MinHeight="295" MinWidth="375">
+    <Grid x:Name="grid">
+        <TextBox x:Name="companyTxtBox" HorizontalAlignment="Left" Height="24" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="174" TabIndex="1" Tag="Företag"/>
+        <Label Content="Företag" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Namn" HorizontalAlignment="Left" Margin="189,10,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="E-post" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Telefonnummer" HorizontalAlignment="Left" Margin="189,65,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="messageTxtBox" HorizontalAlignment="Left" Height="113" Margin="12,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="351" TabIndex="5" Tag="Meddelande"/>
+        <Label Content="Meddelande" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="sendBtn" Content="Skicka" HorizontalAlignment="Left" Margin="290,264,0,0" VerticalAlignment="Top" Width="75" TabIndex="6" Click="sendBtn_Click"/>
+        <TextBox x:Name="nameTxtBox" HorizontalAlignment="Left" Height="24" Margin="189,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="174" TabIndex="2" Tag="Namn"/>
+        <TextBox x:Name="emailTxtBox" HorizontalAlignment="Left" Height="24" Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="174" TabIndex="3" Tag="E-post" BorderBrush="#FF0040FF"/>
+        <TextBox x:Name="phoneTxtBox" HorizontalAlignment="Left" Height="24" Margin="189,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="174" TabIndex="4" Tag="Telefonnummer"/>
+
+    </Grid>
+</UserControl>

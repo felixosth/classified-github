@@ -1,0 +1,16 @@
+﻿<Window x:Class="PluginConfigDebuggerWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PluginConfigDebuggerWpf" xmlns:tryggdriftserviceplugin="clr-namespace:TryggDriftServicePlugin;assembly=TryggDriftServicePlugin"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="569" Width="834">
+    <Grid>
+        <Grid x:Name="grid" Margin="10,10,10,48"/>
+        <Button x:Name="verifyBtn" Content="Verify" HorizontalAlignment="Right" Height="33" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="126" Click="verifyBtn_Click"/>
+        <Button x:Name="saveBtn" Content="Save" HorizontalAlignment="Right" Height="33" Margin="0,0,141,10" VerticalAlignment="Bottom" Width="126" Click="saveBtn_Click"/>
+        <Button x:Name="loadBtn" Content="Load" HorizontalAlignment="Right" Height="33" Margin="0,0,272,10" VerticalAlignment="Bottom" Width="126" Click="loadBtn_Click"/>
+        <Button x:Name="collectDataBtn" Content="Collect data" HorizontalAlignment="Left" Margin="10,0,0,15" VerticalAlignment="Bottom" Width="126" Height="33" Click="collectDataBtn_Click"/>
+    </Grid>
+</Window>

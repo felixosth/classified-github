@@ -1,0 +1,52 @@
+{
+    "name": "dimafe6/bank-id",
+    "type": "library",
+    "version": "2.0.0",
+    "description": "Library for Swedish BankID",
+    "keywords": [
+        "dimafe6",
+        "bank-id"
+    ],
+    "homepage": "https://github.com/dimafe6/bank-id",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Feshchenko",
+            "email": "dimafe2000@gmail.com"
+        },
+        {
+            "name": "Oleg Davudyuk",
+            "email": "ilveann@gmail.com"
+        },
+        {
+            "name": "Anders Fajerson",
+            "email": "anders@perifer.se"
+        },
+        {
+            "name": "Puggan",
+            "email": "puggan@spiro.se"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "guzzlehttp/guzzle": "6.3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.7.* || 6.3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dimafe6\\BankID\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BankID\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
+    }
+}

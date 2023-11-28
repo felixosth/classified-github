@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="InSupport Nätverksvideo AB">
+
+    <title>TryggSTORE - Status</title>
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/shared.css">
+    
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">TryggSTORE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/status.html">Status <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/settings.html">Settings <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/network.html">Network <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h3>Occupancy status</h3>
+        <h4 id="occ">-1</h4>
+        <h4 id="stop"></h4>
+        <button class="btn btn-success" id="start-button" disabled>Start</button>
+        <button class="btn btn-danger" id="stop-button" disabled>Stop</button>
+
+        <div class="stream-div">
+            <label for="stream-img">Stream</label>
+            <img id="stream-img" style="-webkit-user-select: none;" src="/stream.mjpeg">
+        </div>
+    </div>
+
+
+    <footer class="text-muted">
+        <div class="container">
+            <p>&copy; InSupport Nätverksvideo AB - 2021</p>
+        </div>
+    </footer>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#stop-button").click(function () {
+                $.get("/api?action=stop&value=true", function (result) {
+                });
+                getData();
+            });
+            $("#start-button").click(function () {
+                $.get("/api?action=stop&value=false", function (result) {
+                });
+                getData();
+            });
+
+            getData();
+            setInterval(getData, 2000);
+        });
+
+        function getData() {
+            $.get("/api?action=getData", function (data) {
+                //console.log(data);
+
+                if (data !== null) {
+                    // console.log(data);
+
+                    $("#occ").html(data.CurrentCount + "/" + data.MaxOccupancyThreshold);
+                    if (data.EmergencyStop) {
+                        $("#stop").html("EMERGENCY STOP ENGAGED");
+                        $("#stop-button").attr("disabled", true);
+                        $("#start-button").attr("disabled", false);
+                    }
+                    else {
+                        $("#stop").html("");
+                        $("#stop-button").attr("disabled", false);
+                        $("#start-button").attr("disabled", true);
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

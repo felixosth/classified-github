@@ -1,0 +1,4 @@
+<plugin>
+   <file name="REIDSearchAgent.dll"/>
+  <load env="SmartClient"/>
+</plugin>

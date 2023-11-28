@@ -1,0 +1,21 @@
+﻿<wpf:BasePluginConfigWpf  xmlns:wpf="clr-namespace:InSupport.Drift.Plugins.Wpf;assembly=InSupportDrift" x:Class="TryggDriftStoragePlugin.StoragePluginConfigWpf"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TryggDriftStoragePlugin"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ListBox x:Name="drivesListBox" Margin="10" TabIndex="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Checked}" Content="{Binding Display}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </Grid>
+</wpf:BasePluginConfigWpf>

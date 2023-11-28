@@ -1,0 +1,4 @@
+<plugin>
+   <file name="TryggLogin.Server.dll"/>
+   <load env="Service, Administration"/>
+</plugin>

@@ -1,0 +1,60 @@
+﻿<Window x:Class="WinservLite.ArticleManagement"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinservLite"
+        mc:Ignorable="d"
+        Title="ArticleManagement" Height="453.288" Width="597.342" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" KeyDown="Window_KeyDown" Closing="Window_Closing">
+    <Grid >
+        <ListView  x:Name="articlesListView" Margin="10,145,10,35">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding ArticleText}" Width="300" Header="Article"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding ArticlePrice}" Width="100" Header="Price"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Width="60" Header="Quantity"/>
+                    <GridViewColumn Header="Actions" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<Image Source="Resources/edit.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="editReportBtn" MouseDown="editReportBtn_MouseDown"/>-->
+                                    <Image Source="Resources/delete.png" Stretch="Uniform" Width="16" Height="16" Cursor="Hand" Name="deleteReportBtn" MouseDown="deleteReportBtn_MouseDown" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Normal" FontSize="14" Foreground="DodgerBlue" Text="{Binding Name}" Margin="3,0,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" Direction="225" Color="#FF3C3C3C"/>
+                                </TextBlock.Effect></TextBlock>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+            <ListBoxItem/>
+        </ListView>
+        <Border BorderBrush="#FFA2A2A2" BorderThickness="1" HorizontalAlignment="Left" Height="104" Margin="10,36,0,0" VerticalAlignment="Top" Width="287">
+            <Grid  HorizontalAlignment="Left" Width="362">
+                <Label Content="Article:" Margin="10,10,303,69"/>
+                <TextBox x:Name="articleTextTxtBox" HorizontalAlignment="Left" Height="23" Margin="59,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="217" MaxLength="30" BorderBrush="#FF424242"/>
+                <Label Content="Price:" Margin="10,38,303,36"/>
+                <TextBox x:Name="articlePriceTxtBox" HorizontalAlignment="Left" Height="23" Margin="59,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="57" MaxLength="6" BorderBrush="#FF424242" Text="0" GotKeyboardFocus="articlePriceTxtBox_GotKeyboardFocus"/>
+                <Label Content="Quantity:" Margin="121,38,180,36"/>
+                <TextBox x:Name="articleQntTxtBox" HorizontalAlignment="Left" Height="23" Margin="182,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="56" MaxLength="3" BorderBrush="#FF424242" Text="1" GotKeyboardFocus="articleQntTxtBox_GotKeyboardFocus"/>
+                <Button  Content="Add" HorizontalAlignment="Left" Margin="201,72,0,0" VerticalAlignment="Top" Width="75" Click="AddArticleBtn_Click"/>
+
+            </Grid>
+        </Border>
+        <Border  BorderBrush="#FFA2A2A2" BorderThickness="1" HorizontalAlignment="Left" Height="27" Margin="10,10,0,0" VerticalAlignment="Top" Width="94">
+            <Label Content="Add new article" Margin="-1"/>
+        </Border>
+        <Button Content="OK" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="Button_Click"/>
+
+    </Grid>
+</Window>

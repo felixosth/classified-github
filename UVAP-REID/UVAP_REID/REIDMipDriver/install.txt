@@ -1,0 +1,17 @@
+﻿docker network create sql
+docker run -d     --name mysql     --network sql     -e MYSQL_ROOT_PASSWORD="Camera20!"     -v /opt/mysql:/var/lib/mysql     -p 3306:3306   --restart always  mysql
+docker run -d     --name phpmyadmin     --network sql     -e PMA_HOST=mysql     -p 8080:80  --restart always   phpmyadmin/phpmyadmin
+
+docker run -d -p 1880:1880 --name nodered --network sql --restart always nodered/node-red
+NodeRED packages:
+
+node-red-contrib-kafka-manager
+node-red-node-mysql
+
+
+docker update --restart=always mysql
+
+
+
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'Camera20!'
+Skapa användare med native password

@@ -1,0 +1,145 @@
+﻿-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- Värd: mysql
+-- Tid vid skapande: 22 jun 2020 kl 06:16
+-- Serverversion: 8.0.20
+-- PHP-version: 7.4.5
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Databas: `uvap`
+--
+CREATE DATABASE IF NOT EXISTS `uvap` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `uvap`;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `color` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumpning av Data i tabell `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `color`) VALUES
+(1, 'InSupport anställd', '#016AA8'),
+(2, 'Livsfarlig', 'red'),
+(3, 'Gäst', 'green'),
+(4, 'Obehörig', 'purple');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `persons`
+--
+
+CREATE TABLE `persons` (
+  `id` int NOT NULL,
+  `kafka_key` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `category` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `recognitions`
+--
+
+CREATE TABLE `recognitions` (
+  `id` int NOT NULL,
+  `stream` varchar(50) NOT NULL,
+  `person` varchar(50) NOT NULL,
+  `score` float NOT NULL,
+  `time` datetime NOT NULL,
+  `insertTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int NOT NULL,
+  `setting` varchar(100) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumpning av Data i tabell `settings`
+--
+
+INSERT INTO `settings` (`id`, `setting`, `value`) VALUES
+(1, 'default-category', '1');
+
+--
+-- Index för dumpade tabeller
+--
+
+--
+-- Index för tabell `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `persons`
+--
+ALTER TABLE `persons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `kafka_key` (`kafka_key`);
+
+--
+-- Index för tabell `recognitions`
+--
+ALTER TABLE `recognitions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT för dumpade tabeller
+--
+
+--
+-- AUTO_INCREMENT för tabell `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT för tabell `persons`
+--
+ALTER TABLE `persons`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `recognitions`
+--
+ALTER TABLE `recognitions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;

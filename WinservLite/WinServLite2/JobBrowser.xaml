@@ -1,0 +1,165 @@
+﻿<UserControl x:Class="WinServLite2.JobBrowser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WinServLite2"
+             mc:Ignorable="d"
+             Background="White"
+             d:DesignHeight="720" d:DesignWidth="1200">
+    <Grid>
+        <ListView x:Name="jobListView" Margin="10,48,10,10">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    <EventSetter Event="KeyDown" Handler="ListViewItem_KeyDown"/>
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding JobID}" Width="50">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Name="jobIdColumn" Tag="JobID" Click="SortByColumns">ID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="300">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="CompleteJobDescription">
+                                Beskrivning
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding CompleteJobDescription}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding SiteName}" Width="230">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="SiteName">Anläggning
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding SiteID}" Width="80">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="SiteID">AnläggningID
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding CustomerID}" Width="70">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="CustomerID">KundID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding RefName}" Width="130">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="RefName">Referens
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Technician}" Width="50">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="Technician">Tekniker
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateAdded, StringFormat={}{0:dd/MM/yyyy}}" Width="75">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="DateAdded">Datum
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="Status">Status</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border DataContext="{Binding StatusObj}" BorderThickness="2" BorderBrush="{Binding HexColor}" Padding="2">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding JobStatusString}" Width="60">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Click="SortByColumns" Tag="JobStatus">Tillstånd
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Normal" FontSize="16" Foreground="#FF0E7A2B" Text="{Binding Name}" Margin="3,0,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" Direction="225" Color="#3c3c3c"/>
+                                </TextBlock.Effect></TextBlock>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+        <CheckBox x:Name="listOldChckBox" Content="Visa arkiverade jobb" HorizontalAlignment="Left" Margin="625,23,0,0" VerticalAlignment="Top" Height="15" Width="134"
+                  Checked="ListOldChckBox_Checked" Unchecked="ListOldChckBox_Unchecked"/>
+        <Button x:Name="refreshBtn" Margin="411,19,0,0" VerticalAlignment="Top" Width="22" Click="RefreshBtn_Click" HorizontalAlignment="Left" Height="22">
+            <Image Stretch="Fill" Width="14" Height="14" Source="Resources/reload.png"/>
+        </Button>
+        <Label HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Height="26" Width="52">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="15" Height="15" Source="Resources/search.png" Margin="0,0,5,0" >
+                    <!--MouseDown="MagnifyingGlassImage_MouseDown" -->
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Uppdatera" Click="UpdateMenuItem_Click"/>
+                            <MenuItem Header="Appdata" Click="AppdataMenuItem_Click"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Center">Sök:</TextBlock>
+            </DockPanel>
+        </Label>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="22" Margin="62,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="343"/>
+        <Button  Content="X" HorizontalAlignment="Left" Margin="378,19,0,0" VerticalAlignment="Top" Width="27" Height="22" Click="clearSearchBtn_Click"/>
+        <Button x:Name="openCalendarBtn"  Content="Datumfilter" HorizontalAlignment="Left" Margin="518,19,0,0" VerticalAlignment="Top" Width="102" Height="22" Click="OpenCalendarBtn_Click"/>
+        <Button  x:Name="addJobBtn" Margin="0,19,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="124" Height="22" Click="AddJobBtn_Click">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="14" Height="14" Source="Resources/plus.png" Margin="0,0,7,0"/>
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Center">Lägg till ärende</TextBlock>
+            </DockPanel>
+        </Button>
+        <Grid Margin="413,19,0,0" Width="125" Height="150" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button x:Name="jobStatusFilterButton" Content="Statusfilter" VerticalAlignment="Top" Height="22" Margin="25,0" Click="JobStatusFilterButton_Click"/>
+            <Border x:Name="jobStatusFilterBorder" Visibility="Collapsed" BorderBrush="Black" BorderThickness="1" Background="White" Margin="0,22,0,0">
+                <ListBox x:Name="jobStatusesListBox">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Tag="{Binding}" HorizontalAlignment="Stretch" Checked="JobStatusCheckBox_CheckedChanged" Unchecked="JobStatusCheckBox_CheckedChanged" x:Name="checkBox" IsChecked="False" Content="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+        </Grid>
+        <Border Visibility="Collapsed" Name="calendarBorder" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="242" Margin="477,19,0,0" VerticalAlignment="Top" Width="213" Background="White">
+            <StackPanel>
+                <Calendar IsTodayHighlighted="True" x:Name="sortByDatePicker" SelectionMode="MultipleRange" Margin="-1,-3.5,31,0" Height="194" VerticalAlignment="Top">
+                    <Calendar.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1.18" ScaleY="1.18"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Calendar.RenderTransform>
+                </Calendar>
+                <Button  Height="34" Content="Verkställ" x:Name="applyCalendarBtn" Click="ApplyCalendarBtn_Click" Margin="0,0,105,0"/>
+                <Button  Height="34" Content="Töm filter" x:Name="clearCalendarFilter" Click="ClearCalendarFilter_Click" Margin="106,-34,0,0"/>
+                <Button  Content="^" Height="16" Click="CloseCalendarBtn_Click"/>
+            </StackPanel>
+        </Border>
+        <Button x:Name="showTimeReportsBtn" Content="Tidsrapport-rapport" HorizontalAlignment="Left" Margin="765,19,0,0" Height="22" VerticalAlignment="Top" Width="120" Click="ShowTimeReportsBtn_Click"/>
+        <Button x:Name="searchTimeReportsBtn" Content="Tidsrapportsökning" HorizontalAlignment="Left" Margin="890,19,0,0" Height="22" VerticalAlignment="Top" Width="120" Click="searchTimeReportsBtn_Click"/>
+    </Grid>
+</UserControl>

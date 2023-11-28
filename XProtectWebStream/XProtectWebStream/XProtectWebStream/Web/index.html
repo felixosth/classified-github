@@ -1,0 +1,474 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/dark-mode.css" rel="stylesheet" />
+
+    <style>
+
+        body {
+            padding: 1rem;
+        }
+
+        canvas, video {
+            width: 100%;
+            height: auto;
+        }
+
+        canvas.playing, video.playing {
+            border: 1px solid black !important;
+        }
+
+        .modal-backdrop.show {
+            opacity: .8;
+        }
+
+        #video-container {
+            margin-top: 1rem;
+            border-color: black !important;
+        }
+
+        #video-container, .modal-content {
+            background: linear-gradient( 175deg, rgb(48 67 84) 0%, rgb(66 60 84) 100%);
+        }
+
+        #logo-img {
+            width: 30%;
+        }
+
+        #small-logo-img {
+            width: 200px;
+        }
+
+        #nameP {
+            margin-top: .5rem;
+        }
+
+        #expirationP {
+            font-size: .8rem;
+        }
+
+    </style>
+
+    <title>SHARE</title>
+</head>
+<body data-theme="dark">
+
+    <div class="container">
+
+        <div id="logo-img" class="mx-auto d-block">
+            <img src="/img/TryggConnect_SHARE_logo.svg" />
+        </div>
+
+        <div class="border rounded container" id="video-container">
+            <div class="bad-signal text-center">
+                <h2><label>NO SIGNAL</label></h2>
+            </div>
+            <h4 id="nameP" class="text-center"></h4>
+            <canvas id="myCanvas" width="1280" height="720"></canvas>
+            <video id="myVideo" style="display: none;" autoplay muted controls loop controlsList="nodownload"></video>
+            <p id="expirationP" class="text-center"></p>
+
+            <p id="commentP" class="text-center" style="display:none;"></p>
+        </div>
+
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/qrcode.js"></script>
+    <script>
+
+        var expirationParagraph = null;
+        var nameParagraph = null;
+        var socket = null;
+        var countdownInterval = null;
+        var stopCountdown = false;
+        var video = null;
+        var showingRecording = false;
+        var token = null;
+        var modalOpen = false;
+
+        var qrcode = null;
+
+
+        window.onload = function () {
+
+            qrcode = new QRious({
+                element: document.getElementById('qr-code'),
+                size: 450,
+                foreground: "white",
+                background: "transparent"
+            });
+
+            $("#enter-cred-modal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $("#bankid-modal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $("#password-input").keydown(function (evt) {
+                if (evt.keyCode == 13) {
+                    $("#enter-password-btn").click();
+                }
+            });
+
+            document.context = document.getElementById("myCanvas").getContext("2d");
+            document.video = document.getElementById("myVideo");
+
+            //document.getElementById("disconnectBtn").onclick = function (evt) {
+            //    socket.close();
+            //    socketClose({ reason: "Manual" });
+            //    $(this).hide();
+            //};
+
+            $("#enter-password-btn").click(function () {
+
+                $.ajax({
+                    url: "/api",
+                    type: "POST",
+                    data: JSON.stringify({
+                        action: "activateToken",
+                        password: btoa($("#password-input").val()),
+                        token
+                    }),
+                    success: onApiResponse,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false
+                });
+            });
+
+            //console.log("load");
+            //statusParagraph = document.getElementById("statusP");
+            expirationParagraph = document.getElementById("expirationP");
+            nameParagraph = document.getElementById("nameP");
+
+
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("t") && urlParams.get("t") != "") {
+
+                token = urlParams.get("t");
+
+                $.get("/api?action=activateToken&token=" + token, onApiResponse);
+            }
+
+            setDefaultImage();
+        };
+
+        function onApiResponse(data) {
+            if (data !== null) {
+
+                if (data.token == true) {
+
+                    if (data.passwordRequred == true) {
+
+                        if (modalOpen == false) {
+
+                            $("#enter-cred-modal").modal('show');
+                            modalOpen = true;
+                        }
+                        else if (data.wrongPassword == true) {
+                            $("#invalid-pwd-feedback").html("Felaktigt lösenord.");
+                            $("#password-input").addClass("is-invalid");
+                        }
+                    } else if (data.bankId == true) {
+
+                        if (data.autoStartToken != undefined) {
+
+                            //var link = "https://app.bankid.com/?autostarttoken=" + data.autoStartToken + "&redirect=null";
+                            var link = "bankid:///?autostarttoken=" + data.autoStartToken + "&redirect=" + window.location.href;
+                            $("#open-bankid-btn").attr("href", link);
+
+                            qrcode.value= data.qrdata;
+
+                            $("#bankid-modal").modal('show');
+                            pollBankId();
+                        } else if (data.unauthorized == true) {
+                            nameParagraph.innerText = "Du har inte behörighet till detta";
+                            $("#bankid-modal").modal('hide');
+                        }
+                    }
+                    else {
+
+                        $("#password-input").removeClass("is-invalid");
+                        $("#password-input").addClass("is-valid");
+
+                        $("#enter-cred-modal").modal('hide');
+                        $("#bankid-modal").modal('hide');
+
+                        $("div.bad-signal").hide();
+
+                        modalOpen = false;
+
+                        nameParagraph.innerText = data.name;
+
+                        $("#commentP").html(data.createdBy.split('(')[0].trim() + " har delat en länk med dig.").show();
+
+                        if (data.comment != undefined && data.comment != null)
+                            $("#commentP").append("<br>" + data.comment).show();
+
+                        if (data.type == 1 && startWebSocket(token)) {
+                            $("#myCanvas").addClass("playing");
+
+                            doCountdown(new Date(data.expires));
+                            document.context.canvas.onclick = function () { this.requestFullscreen(); };
+                            document.context.canvas.title = "Klicka för att öppna fullskärm";
+
+                        }
+                        else if (data.type == 2) {
+
+                            showingRecording = true;
+                            $("#myVideo").addClass("playing").show();
+
+                            $("#myCanvas").hide();
+
+                            var source = document.createElement("source");
+                            source.src = "/video?t=" + token;
+                            source.type = "video/mp4";
+                            document.video.appendChild(source);
+
+                            console.log("Showing recorded video");
+
+                            doCountdown(new Date(data.expires));
+                            pollToken();
+                        }
+                    }
+                }
+                else {
+                    console.log("Invalid token");
+                    //statusParagraph.innerText = "Invalid token";
+                }
+            }
+        }
+
+        function pollBankId() {
+            var bankIdPoll = setInterval(function () {
+                $.get("/api?action=bankIdCollect", function (response) {
+
+                    if (response.status != "pending") {
+
+                        clearInterval(bankIdPoll);
+                        $.get("/api?action=activateToken&token=" + token, onApiResponse);
+                    }
+                    else {
+                        qrcode.value = response.qrdata;
+                    }
+                });
+            }, 1000);
+        }
+
+        function pollToken() {
+
+            var tokenPoll = setInterval(function () {
+                $.get("/api?action=activateToken&token=" + token, function (response) {
+                    if (response != null && response.token == false) {
+
+                        disableVideo();
+                        clearInterval(countdownInterval);
+                        clearInterval(tokenPoll);
+                        expirationParagraph.style.display = "none";
+                        console.log("Token revoked");
+                        //statusParagraph.innerText = "Token revoked";
+                    }
+                });
+            }, 2 * 1000);
+        }
+
+        function disableVideo() {
+            $(document.video).remove();
+            setDefaultImage();
+        }
+
+        function doCountdown(countDownDate) {
+
+            writeCountdown(countDownDate);
+
+            // Update the count down every 1 second
+            countdownInterval = setInterval(function () {
+
+                var distance = writeCountdown(countDownDate);
+
+                // If the count down is over, write some text
+                if (distance < 0 || stopCountdown) {
+                    clearInterval(countdownInterval);
+                    expirationParagraph.innerText = "Länken gick ut.";
+
+
+                    if (showingRecording) {
+                        disableVideo();
+
+                        //statusParagraph.innerText = "Token expired";
+                        console.log("Token expired");
+                    }
+                }
+            }, 1000);
+        }
+
+
+        function writeCountdown(countDownDate) {
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            expirationParagraph.innerHTML = "Denna länk går ut om " + (days > 0 ? days + "d " : "") + (hours > 0 ? hours + "h " : "") + (minutes > 0 ? minutes + "m " : "") + seconds + "s ";
+
+            return distance;
+        }
+
+        function startWebSocket(token) {
+
+            stopCountdown = false;
+
+            var wsProtocol = "ws";
+
+            if (location.protocol === 'https:')
+                wsProtocol = "wss";
+
+            socket = new WebSocket(wsProtocol + '://' + document.location.host + '/ws?t=' + token);
+
+            socket.onopen = function (evt) {
+                //$("#disconnectBtn").removeAttr("disabled").show();
+            };
+
+            socket.onmessage = function (msg) {
+
+                if (msg.data instanceof Blob)
+                    renderImage(msg.data);
+            };
+
+            socket.onerror = function (evt) {
+                //console.log(evt);
+                setDefaultImage();
+            };
+
+
+            socket.onclose = socketClose;
+
+            return true;
+        }
+
+        function socketClose(event) {
+
+            stopCountdown = true;
+            setDefaultImage();
+
+            console.log("ws close ", event.reason);
+        }
+
+        function renderImage(blob) {
+
+            var img = new Image();
+
+            img.onload = function () {
+                document.context.canvas.width = img.width;
+                document.context.canvas.height = img.height;
+                document.context.drawImage(img, 0, 0)
+            }
+
+            img.src = URL.createObjectURL(blob);
+        }
+
+        function setDefaultImage() {
+
+            document.context.clearRect(0, 0, document.context.canvas.width, document.context.canvas.height);
+            document.context.canvas.onclick = null;
+            document.context.canvas.title = null;
+            $("#myCanvas").show().removeClass("playing");
+            nameParagraph.innerText = "";
+            $("#myVideo").hide();
+            $("#commentP").hide();
+            $("div.bad-signal").show();
+
+        }
+
+    </script>
+
+
+    <!-- Password Modal -->
+    <div class="modal fade" id="enter-cred-modal" tabindex="-1" aria-labelledby="pwdModalTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div id="small-logo-img" class="mx-auto d-block">
+                        <img src="/img/TryggConnect_SHARE_logo.svg" />
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <p>Detta är en inbjudan till att ta del av en kamera.</p>
+                </div>
+                <div class="modal-body">
+                  <!--  <h5 class="modal-title" id="pwdModalTitleLabel">Password required</h5>-->
+                    <div class="form-group">
+                        <label for="password-input" class="form-label">Skriv in lösenordet</label>
+                        <input type="password" class="form-control" id="password-input" placeholder="Lösenord">
+                        <div id="invalid-pwd-feedback" class="invalid-feedback"></div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="enter-password-btn" class="btn btn-outline-light">Skicka</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Password Modal -->
+    <!-- BankID Modal -->
+    <div class="modal fade" id="bankid-modal" tabindex="-1" aria-labelledby="bankIdModalTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div id="small-logo-img" class="mx-auto d-block">
+                        <img src="/img/TryggConnect_SHARE_logo.svg" />
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <p>Detta är en inbjudan till att ta del av en kamera.</p>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title" id="bankIdModalTitleLabel" style="margin-bottom: 1rem;">Identifiera dig med BankID</h5>
+                    <ol style="margin-bottom: 0;">
+                        <li>Öppna BankID-appen på din enhet.</li>
+                        <li>Tryck på QR-symbolen i BankID-appen.</li>
+                        <li>Rikta kameran mot QR-koden i denna ruta.</li>
+                        <li>Identifiera dig i BankID-appen.</li>
+                    </ol>
+                    <canvas id="qr-code" class="rounded img-fluid" style="padding: .5rem;"></canvas>
+
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-outline-light" id="open-bankid-btn" href="https://app.bankid.com/?autostarttoken=[TOKEN]&redirect=null" target="_blank">
+                            <div class="Button-icon" style="display: inline; margin-right: .25rem;">
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M22.154 21.503c-.113.73-.501 1.071-1.205 1.071h-.384l.338-2.145h.388c.782 0 .95.535.863 1.074zm-.473-2.043h-2.077l-.64 4.084H21.3c1.409 0 2.152-1.06 2.3-1.988.145-.946-.318-2.096-1.92-2.096zm-4.873 4.084h1.45l.641-4.084h-1.45l-.64 4.084zm-1.668-3.162l-1.21 1.09.316-2.012h-1.263l-.639 4.084h1.262l.228-1.46h.012l.96 1.46h1.585l-1.246-1.815 1.554-1.347h-1.56zm-4.05-.053c-.402 0-.707.132-1.107.467l.066-.414H8.786l-.495 3.162h1.262l.29-1.85c.176-.234.358-.342.558-.342.249 0 .34.145.292.462l-.272 1.73h1.263l.327-2.09c.11-.7-.217-1.125-.922-1.125zm-4.65 2.293a.879.879 0 00-.015.294c-.19.131-.436.216-.635.216-.206 0-.334-.15-.303-.354.067-.431.688-.395 1.024-.605l-.071.45zm1.213-.299l.14-.899c.125-.796-.525-1.095-1.265-1.095-.578 0-1.078.167-1.596.538l-.146.928c.598-.4.947-.538 1.365-.538.359 0 .476.101.444.39-.382.256-1.354.304-1.747.64a.927.927 0 00-.328.54c-.065.407.183.772.9.772.393 0 .763-.102 1.097-.306.153.27.459.335 1.09.293l.363-.843c-.358-.008-.367-.103-.317-.42zm-4.67-1.707c-.046.293-.266.539-.74.539h-.417l.166-1.073h.42c.473 0 .62.222.572.534zm-.165 1.713c-.063.401-.348.593-.834.593h-.437l.18-1.144H2.2c.474 0 .672.21.618.551zm.244-2.87H.64L0 23.545h2.755c.765 0 1.352-.497 1.457-1.161.082-.527-.144-.868-.722-1.084.458-.186.723-.467.782-.851.075-.473-.178-.988-1.21-.988zM15.514 1.2H9.478l-.809 5.044 1.026.002c.563-.003 1.092-.253 1.318-.623a.604.604 0 00.104-.32c0-.21-.142-.367-.288-.473-.398-.292-.481-.603-.481-.815 0-.046.003-.085.008-.12.086-.534.817-1.105 1.776-1.105.573 0 1.017.132 1.283.38a.88.88 0 01.261.844c-.081.38-.47.698-.693.854-.584.405-.507.76-.47.859.12.317.583.514.943.514h1.564v.006c2.129.016 3.27.981 2.91 3.228-.334 2.088-1.956 2.988-3.893 3.01l-.77 4.825h1.135c4.78 0 8.686-3.032 9.453-7.814.95-5.923-2.867-8.296-8.341-8.296zM7.59 12.892h-.017l1-6.235h-1.07c-.506 0-1.148-.275-1.339-.785-.066-.17-.209-.768.62-1.345.293-.202.488-.427.525-.598a.468.468 0 00-.137-.457c-.185-.173-.538-.267-.996-.267-.77 0-1.313.439-1.36.752-.035.234.148.422.307.538.479.35.591.864.293 1.345-.303.496-.961.817-1.673.822L2.65 6.66c-.093.608-1.579 9.918-1.691 10.65h5.93c.052-.331.328-2.088.701-4.418z" fill="currentColor" fill-rule="evenodd">
+                                    </path>
+                                </svg>
+                            </div>
+                            Logga in med BankID på samma enhet
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / BankID Modal -->
+
+</body>
+</html>

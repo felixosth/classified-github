@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/dark-mode.css" rel="stylesheet" />
+
+    <title>Access - TryggSHARE</title>
+
+    <style>
+
+        table[groupid].can-drop {
+            border: 2px solid transparent !important;
+            border-color: transparent !important;
+        }
+
+        table[groupid].drop-target {
+            border: 2px solid green !important;
+            border-color: green !important;
+        }
+
+        table[groupid] tbody tr:hover {
+            background-color: rgba(255, 255, 255, .06);
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/154158c4b0.js" crossorigin="anonymous"></script>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <h2>Admin</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-group-modal">New group</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-user-modal">New user</button>
+
+        <div class="row">
+
+
+
+            <div class="col" id="first-col">
+            </div>
+            <div class="col" id="second-col">
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        var unassignedTBody = null;
+
+        $(window).ready(function () {
+
+            $("#new-group-submit-btn").click(function () {
+
+                var name = $("#group-name-input").val();
+
+                if (name != "") {
+
+                    ajax({
+                        action: "admin",
+                        adminAction: "addAccessGroup",
+                        group: { name }
+                    }, function (data) {
+                        if (data.result == true) {
+                            $("#new-group-modal").modal('hide');
+                            refreshPage();
+                        }
+                    });
+                }
+                else {
+                    alert("Input a name");
+                }
+            });
+
+            $("#new-user-submit-btn").click(function () {
+
+                var name = $("#user-name-input").val();
+                var pnr = $("#user-pnr-input").val();
+
+                if (name != "" && pnr.length == 12) {
+
+                    ajax({
+                        action: "admin",
+                        adminAction: "addAccessUser",
+                        user: { name, pnr, groupId: -1 }
+                    }, function (data) {
+                        if (data.result == true) {
+
+                            $("#new-user-modal").modal('hide');
+                            refreshPage();
+
+                        }
+                    });
+                }
+                else {
+                    alert("Input name and pnr");
+                }
+            });
+
+            refreshPage();
+
+
+        });
+
+        function refreshPage() {
+            $.get("/api?action=admin&adminAction=getAccessGroups", function (groups) {
+
+                var firstCol = document.getElementById("first-col");
+                var secondCol = document.getElementById("second-col");
+                firstCol.innerHTML = "";
+                secondCol.innerHTML = "";
+                var nextCol = firstCol;
+
+                groups.forEach(function (group) {
+
+                    var table = document.createElement("table");
+                    table.classList = "table can-drop";
+                    table.setAttribute("groupid", group.Id);
+                    table.setAttribute("groupname", group.Name);
+
+                    table.addEventListener("drop", drop_handler);
+                    table.addEventListener("dragover", dragover_handler);
+
+                    var thead = table.createTHead();
+                    var tbody = table.createTBody();
+
+                    var headRow = thead.insertRow();
+                    var nameHeadCell = headRow.insertCell();
+                    nameHeadCell.classList = "group-name";
+                    nameHeadCell.innerHTML = "<b>" + group.Name + "</b>";
+
+
+                    if (group.Id > 0) {
+                        var buttonsHeadCell = headRow.insertCell();
+                        buttonsHeadCell.innerHTML = '<div class="btn-group" role"group"> <button type="button" class="btn btn-outline-secondary change-grp-name-btn"><i class="far fa-edit"></i></button> <button type="button" class="btn btn-outline-danger delete-grp-btn"><i class="far fa-trash-alt"></i></button> </div>';
+                        buttonsHeadCell.setAttribute("colspan", "2");
+                    } else {
+                        unassignedTBody = tbody;
+                        nameHeadCell.setAttribute("colspan", "3");
+                    }
+
+
+                    group.Users.forEach(function (user) {
+                        var row = tbody.insertRow();
+                        row.setAttribute("draggable", "True");
+                        row.addEventListener("dragstart", dragstart_handler);
+                        row.addEventListener("dragend", dragend_handler);
+
+                        row.style.cursor = "grab";
+                        row.id = "user-" + user.Id;
+                        row.setAttribute("userid", user.Id);
+
+                        var nameCell = row.insertCell();
+                        nameCell.setAttribute("userprop", "name");
+                        nameCell.innerText = user.Name;
+                        var pnrCell = row.insertCell();
+                        pnrCell.setAttribute("userprop", "pnr");
+                        pnrCell.innerText = user.PNR;
+
+                        var buttonsCell = row.insertCell();
+                        buttonsCell.innerHTML = '<div class="btn-group" role"group"> <button type="button" class="btn btn-outline-secondary change-usr-name-btn"><i class="far fa-edit"></i></button> <button type="button" class="btn btn-outline-danger delete-usr-btn"><i class="far fa-trash-alt"></i></button> </div>';
+
+                    });
+
+                    sortTable(table);
+                    nextCol.appendChild(table);
+                    nextCol = nextCol == firstCol ? secondCol : firstCol;
+
+                });
+
+                $(".change-grp-name-btn").click(function () {
+                    var $grp = $(this).parents("table");
+                    var newName = prompt("Change group name", $grp.attr("groupname"));
+                    var groupId = parseInt($grp.attr("groupid"));
+
+                    if (newName != null) {
+
+                        ajax({
+                            action: "admin",
+                            adminAction: "modifyAccessGroup",
+                            group: { id: groupId, name: newName }
+                        }, function (data) {
+                            if (data.result == true) {
+                                $grp.attr("groupname", newName);
+                                $grp.find(".group-name").html("<b>" + newName + "</b>");
+                            }
+                        });
+                    }
+                });
+
+                $(".delete-grp-btn").click(function () {
+                    var $grp = $(this).parents("table");
+                    var groupId = parseInt($grp.attr("groupid"));
+
+                    if (confirm("Are you sure you want to delete the group '" + $grp.attr("groupname") + "'?")) {
+
+                        ajax({ action: "admin", adminAction: "deleteAccessGroup", group: { id: groupId } }, function (data) {
+                            if (data.result == true) {
+                                $grp.find("tbody tr").each(function () {
+                                    unassignedTBody.appendChild(this);
+                                });
+                                $grp.remove();
+                                sortTable(unassignedTBody);
+                            }
+                        });
+                    }
+                });
+
+                $(".change-usr-name-btn").click(function () {
+
+                    var $usr = $(this).parents("tr");
+                    var usrId = parseInt($usr.attr("userid"));
+                    var newName = prompt("Change user name", $usr.find('[userprop="name"]').text());
+                    var groupId = parseInt($(this).parents("table").attr("groupid"));
+
+                    if (newName != null) {
+                        ajax({
+                            action: "admin",
+                            adminAction: "modifyAccessUser",
+                            user: { id: usrId, groupId, name: newName }
+                        }, function (data) {
+                            if (data.result == true) {
+                                $usr.find('[userprop="name"]').text(newName);
+                            }
+                        });
+                    }
+                });
+
+                $(".delete-usr-btn").click(function () {
+                    var $usr = $(this).parents("tr");
+                    var usrId = parseInt($usr.attr("userid"));
+                    if (confirm("Are you sure you want to delete the user '" + $usr.find('[userprop="name"]').text() + "'?")) {
+                        ajax({
+                            action: "admin",
+                            adminAction: "deleteAccessUser",
+                            user: { id: usrId }
+                        }, function (data) {
+                            if (data.result == true) {
+                                $usr.remove();
+                            }
+                        });
+                    }
+
+                });
+            });
+        }
+
+        function dragstart_handler(ev) {
+            // Add the target element's id to the data transfer object
+            ev.dataTransfer.setData("text/plain", ev.target.id);
+            ev.dataTransfer.effectAllowed = "move";
+
+            $("table[groupid]").addClass("drop-target").removeClass("can-drop");
+
+
+            //console.log("start", ev);
+        }
+
+        function dragend_handler(ev) {
+            $("table[groupid]").removeClass("drop-target").addClass("can-drop");
+
+        }
+
+        function dragover_handler(ev) {
+            //console.log("drag", ev);
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
+        }
+
+        function drop_handler(ev) {
+            //console.log("drop", ev);
+            ev.preventDefault();
+            // Get the id of the target and add the moved element to the target's DOM
+            const data = ev.dataTransfer.getData("text/plain");
+
+            var table = ev.target;
+
+            var elementBeingDragged = document.getElementById(data);
+
+            if ($(table).is("table") == false)
+                table = $(ev.target).parents("table")[0];
+
+            var userId = parseInt(elementBeingDragged.getAttribute("userid"));
+            var groupId = parseInt(table.getAttribute("groupid"));
+            var name = $(elementBeingDragged).children('[userprop="name"]').first().text();
+            //var pnr = $(elementBeingDragged).children('[userprop="pnr"]').first().text();
+
+            ajax({ action: "admin", adminAction: "modifyAccessUser", user: { id: userId, groupId, name } }, function (data) {
+                if (data.result == true) {
+                    $(table).find("tbody").append(elementBeingDragged);
+                    sortTable(table);
+                }
+            });
+        }
+
+        function sortTable(table) {
+            var rows, switching, i, x, y, shouldSwitch;
+            switching = true;
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[0];
+                    y = rows[i + 1].getElementsByTagName("TD")[0];
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+
+        function ajax(data, done) {
+            $.ajax("/api", {
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                type: "POST",
+                dataType: "json"
+
+            }).done(done);
+        }
+
+    </script>
+
+
+    <!-- New Group Modal -->
+    <div class="modal fade" id="new-group-modal" tabindex="-1" aria-labelledby="newGroupTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newGroupTitleLabel">New group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="group-name-input" class="form-label">Enter name</label>
+                        <input type="text" class="form-control" id="group-name-input" placeholder="My group name" maxlength="80">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new-group-submit-btn" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / New Group Modal -->
+    <!-- New User Modal -->
+    <div class="modal fade" id="new-user-modal" tabindex="-1" aria-labelledby="newUserTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newUserTitleLabel">New user</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="user-name-input" class="form-label">Enter name</label>
+                        <input type="text" class="form-control" id="user-name-input" placeholder="My user's name" maxlength="80">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-pnr-input" class="form-label">Enter PNR</label>
+                        <input type="text" class="form-control" id="user-pnr-input" placeholder="199001011234" maxlength="12">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new-user-submit-btn" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / New User Modal -->
+</body>
+</html>

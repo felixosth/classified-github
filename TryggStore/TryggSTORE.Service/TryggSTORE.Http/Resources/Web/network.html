@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/shared.css">
+    <title>TryggSTORE - Network</title>
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">TryggSTORE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/status.html">Status <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/settings.html">Settings <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/network.html">Network <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h3>Network status</h3>
+        <p>Clients connected to <a href="/stream.mjpeg" target="_blank">/stream.mjpeg</a></p>
+
+        <table id="connections-table" class="table">
+            <thead>
+                <tr>
+                    <th>Remote endpoint</th>
+                    <th>Kbit/s bandwidth</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+
+    <footer class="text-muted">
+        <div class="container">
+            <p>&copy; InSupport Nätverksvideo AB - 2021</p>
+        </div>
+    </footer>
+
+
+    <script>
+        var table = null;
+        $(document).ready(function () {
+            table = document.getElementById("connections-table").querySelector("tbody");
+            getData();
+            setInterval(getData, 2000);
+        });
+
+        function getData() {
+            $.get("/api?action=getNetwork", function (data) {
+                console.log(data);
+
+                if (data !== null) {
+
+                    $("#connections-table tbody tr").remove();
+
+                    if (data.length > 0) {
+
+                        for (var i in data) {
+                            var row = table.insertRow();
+
+                            var endpointCell = row.insertCell();
+                            endpointCell.innerText = data[i].Client;
+
+                            var bandwidthCell = row.insertCell();
+                            bandwidthCell.innerText = data[i].KbpsBandwidth;
+                        }
+                    }
+                    else {
+                        var row = table.insertRow();
+
+                        var endpointCell = row.insertCell();
+                        endpointCell.innerText = "No clients connected";
+
+                        var bandwidthCell = row.insertCell();
+                        bandwidthCell.innerText = "0";
+                    }
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

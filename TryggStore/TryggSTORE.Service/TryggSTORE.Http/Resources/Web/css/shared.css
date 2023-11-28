@@ -1,0 +1,54 @@
+﻿#stream-img {
+	width: 75%;
+	height: 75%;
+	border: 1px solid black;
+}
+
+@media only screen and (max-width: 991px) {
+	#stream-img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.navbar-brand::before {
+	content: "\1F499";
+}
+
+.stop-ico::before {
+	content: "\26D4"
+}
+
+.warning-ico::before {
+	content: "\26A0"
+}
+
+.tv-ico::before {
+	content: "\1F4FA"
+}
+
+.gear-ico::before {
+	content: "\2699";
+}
+
+.stream-div {
+	margin-top: 2rem;
+}
+
+label[for="stream-img"] {
+	display: block;
+	margin-bottom: 0;
+}
+
+.container {
+	margin-top: 1rem;
+}
+
+body {
+	margin-bottom: 1rem !important;
+}
+
+
+#stop {
+	color: red;
+}

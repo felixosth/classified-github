@@ -1,0 +1,3 @@
+﻿"C:\Program Files\7-Zip\7z.exe" a -ttar -so -an * | "C:\Program Files\7-Zip\7z.exe" a -si tryggdrift.tar.gz
+
+wget -c https://drift.tryggconnect.se/download/tryggdrift.tar.gz -O - | tar -xz

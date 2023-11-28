@@ -1,0 +1,159 @@
+﻿<Window x:Class="WinservLite.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinservLite"
+        MinWidth="1213"
+        mc:Ignorable="d"
+        Title="WinServ Lite" Height="815.372" Width="1653.381" Icon="rocket big.ico" Closing="Window_Closing">
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="822*"/>
+            <ColumnDefinition Width="823*"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="jobListView" Margin="10,38,10,41" SelectionChanged="jobListView_SelectionChanged" Grid.ColumnSpan="2" >
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding JobID}" Width="50">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Name="jobIdColumn" Tag="JobID">Job ID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Job Description" Width="800">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding CompleteJobDescription}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding SiteName}" Width="230">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SiteName">Site Name
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding SiteID}" Width="80">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SiteID">Site ID
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding CustomerID}" Width="70">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="CustomerID">Customer ID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding RefName}" Width="130">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="RefName">Reference
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Technician}" Width="50">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Technician">TEKN
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateAdded, StringFormat={}{0:dd/MM/yyyy}}" Width="75">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="DateAdded">Date
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding JobStatus}" Width="60">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="JobStatus">Status
+                            </GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Normal" FontSize="16" Foreground="DodgerBlue" Text="{Binding Name}" Margin="3,0,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" Direction="225" Color="#3c3c3c"/>
+                                </TextBlock.Effect></TextBlock>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+        <Button  x:Name="refreshBtn" Margin="0,13,10,0" VerticalAlignment="Top" Width="76" Click="refreshBtn_Click" HorizontalAlignment="Right" Grid.Column="1" Height="20">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="14" Height="14" Source="Resources/reload.png" Margin="0,0,7,0"/>
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Center">Reload</TextBlock>
+            </DockPanel>
+        </Button>
+        <TextBox x:Name="searchBox" HorizontalAlignment="Left" Height="23" Margin="78,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="327">
+            <!--<TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="autoSearchContextMenuItem" Checked="AutoSearchContextMenuItem_Checked" Unchecked="AutoSearchContextMenuItem_Unchecked" IsCheckable="True" Header="AutoSearch"/>
+                </ContextMenu>
+            </TextBox.ContextMenu>-->
+        </TextBox>
+        <Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="68">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="15" Height="15" Source="Resources/search.png" Margin="0,0,5,0" MouseDown="Image_MouseDown"/>
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Center">Search:</TextBlock>
+            </DockPanel>
+        </Label>
+        <Button  x:Name="addJobBtn" Margin="542,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="106" Height="23" Click="addJobBtn_Click">
+            <DockPanel LastChildFill="True">
+                <Image Stretch="Fill" Width="14" Height="14" Source="Resources/plus.png" Margin="0,0,7,0"/>
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Center">Add new job</TextBlock>
+            </DockPanel>
+        </Button>
+        <Label MouseDown="copyrightText_MouseDown" Content="©2019 InSupport Nätverksvideo AB" Margin="704,0,705,10" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="236" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Height="26"/>
+        <Button  Content="X" HorizontalAlignment="Left" Margin="404,10,0,0" VerticalAlignment="Top" Width="27" Height="23" Click="Button_Click"/>
+        <CheckBox x:Name="listOldChckBox" Content="List archived jobs" HorizontalAlignment="Right" Margin="0,15,91,0" VerticalAlignment="Top" RenderTransformOrigin="0.31,0.267" Panel.ZIndex="5" Grid.Column="1" Height="15" Width="111" />
+        <TextBlock  x:Name="countLabel" Text="Items" HorizontalAlignment="Left" Margin="10,0,0,13" FontSize="10" VerticalAlignment="Bottom" Height="13" Width="290"/>
+        <Label Content="User:" HorizontalAlignment="Right" Margin="0,9,320,0" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="36"/>
+        <TextBox x:Name="usrBox" HorizontalAlignment="Right" Height="23" Margin="0,10,247,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="73" Panel.ZIndex="4" Grid.Column="1"/>
+        <Button  Content="Set" HorizontalAlignment="Right" Margin="0,10,207,0" VerticalAlignment="Top" Width="41" Height="23" Click="Button_Click_1" Panel.ZIndex="4" Grid.Column="1"/>
+        <Button  Content="Filter by dates" HorizontalAlignment="Left" Margin="435,10,0,0" VerticalAlignment="Top" Width="102" Height="23" Click="Button_Click_2"/>
+        <Border Visibility="Collapsed" Name="calendarBorder" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="242" Margin="435,10,0,0" VerticalAlignment="Top" Width="213" Background="White">
+            <StackPanel>
+                <Calendar   IsTodayHighlighted="False" x:Name="sortByDatePicker" SelectionMode="MultipleRange" Margin="-1,-3.5,31,0" Height="194" VerticalAlignment="Top">
+                    <Calendar.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1.18" ScaleY="1.18"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Calendar.RenderTransform>
+                </Calendar>
+                <Button  Height="34" Content="Apply" x:Name="closeCalendarBtn" Click="closeCalendarBtn_Click" Margin="0,0,105,0"/>
+                <Button   Height="34" Content="Clear filter" x:Name="clearCalendarFilter" Click="clearCalendarFilter_Click" Margin="106,-34,0,0"/>
+                <Button   Content="^" Height="16" Click="Button_Click_3"/>
+            </StackPanel>
+        </Border>
+        <Button Panel.ZIndex="4" x:Name="getTimeReportsButton" Content="Get time-reports" HorizontalAlignment="Right"  Margin="0,10,361,0" VerticalAlignment="Top" Width="95" Height="23" Click="Button_Click_4" Grid.Column="1"/>
+        <Expander Panel.ZIndex="3" x:Name="bookmarksExpander" Header="Bookmarks" HorizontalAlignment="Left" Height="239" Margin="653,11,0,0" VerticalAlignment="Top" IsExpanded="False" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="327" Grid.ColumnSpan="2">
+            <ListView  x:FieldModifier="public" x:Name="BookmarksListView" Height="216" SelectionMode="Single" Margin="0,0,-2,0">
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="bookmarkList_ItemDoubleClick" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding JobID}" Header="Job" Width="40"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding SiteName}" Header="Site" Width="270"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Expander>
+        <Button Content="Time-report search" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,461,0" VerticalAlignment="Top" Width="120" Height="23" Click="TimeReport_SearchButton"/>
+    </Grid>
+</Window>

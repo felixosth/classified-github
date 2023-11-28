@@ -1,0 +1,26 @@
+﻿<client:LoginUserControl
+    xmlns:client="clr-namespace:VideoOS.Platform.Client;assembly=VideoOS.Platform" x:Class="SCLogin.Login.YubikeyLoginUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SCLogin.Login"
+             mc:Ignorable="d" Width="320" d:DesignHeight="200" Loaded="LoginUserControl_Loaded">
+    <Grid>
+        <TextBox x:Name="otpTextBox" Height="23" Margin="20,132,20,0" VerticalAlignment="Top" Text="" HorizontalAlignment="Stretch" KeyDown="otpTextBox_KeyDown"/>
+        <TextBlock IsHitTestVisible="False" Text="Yubikey OTP" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="22" Margin="23,133,20,0" Foreground="DarkGray">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=otpTextBox}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Button x:Name="loginBtn" Content="Login" Margin="115,160,115,0" VerticalAlignment="Top" Click="loginBtn_Click"/>
+        <Image Height="88" Margin="70,10,70,0" VerticalAlignment="Top" Source="/TryggLogin.Client;component/Resources/yubico-circle-y-mark-128x128-transp.png"/>
+    </Grid>
+</client:LoginUserControl>

@@ -1,0 +1,8 @@
+AuthUserFile /var/www/ekosnapshot.tryggconnect.se/.htpasswd
+AuthType Basic
+AuthName "EKO Snapshots"
+Require valid-user
+
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}

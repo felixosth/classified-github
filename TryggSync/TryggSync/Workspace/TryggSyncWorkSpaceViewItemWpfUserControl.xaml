@@ -1,0 +1,63 @@
+<platformclient:ViewItemWpfUserControl x:Class="TryggSync.Workspace.TryggSyncWorkSpaceViewItemWpfUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TryggSync.Client"
+             xmlns:platformclient="clr-namespace:VideoOS.Platform.Client;assembly=VideoOS.Platform"
+             mc:Ignorable="d" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Loaded="ViewItemWpfUserControl_Loaded">
+    <platformclient:ViewItemWpfUserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/TryggSync;component/Resources/CustomStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </platformclient:ViewItemWpfUserControl.Resources>
+    <Grid Name="mainBackGrid" MinWidth="800" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Margin="10,10,0,61" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="210">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border BorderThickness="2" Height="29" Margin="0,0,0,325" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Label Content="Current viewers:" HorizontalContentAlignment="Center" VerticalAlignment="Top" Foreground="White"/>
+            </Border>
+            <Border BorderThickness="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,27,0,30">
+                <ListBox x:Name="viewersListBox" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White"/>
+            </Border>
+            <Border BorderThickness="2" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <Label x:Name="operatorNameLabel" Content="Name of operator" HorizontalContentAlignment="Center" Foreground="White"/>
+            </Border>
+        </Grid>
+        <Border BorderThickness="2" Margin="225,10,10,91">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="283*"/>
+                    <RowDefinition Height="37*"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="imageViewerContainer" Grid.Row="0" Background="#00000000">
+                    <platformclient:ImageViewerWpfControl x:Name="imageViewer" Panel.ZIndex="0"/>
+                    <local:CustomInkCanvas x:Name="customInkCanvas" Panel.ZIndex="1" IsEnabled="False"/>
+                </Grid>
+                <Grid x:Name="imageControllerContianer" Grid.Row="1">
+                    <!--<local:CustomPlaybackUserControl x:Name="customPlaybackUserControl"/>-->
+                    <!--<Button Content="Clear" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="49" Click="Button_Click" IsEnabled="False" x:Name="clearStrokesBtn"/>-->
+                </Grid>
+            </Grid>
+        </Border>
+        <Button x:Name="pickCamBtn" Content="Pick camera" HorizontalAlignment="Right" Margin="0,0,10,61" VerticalAlignment="Bottom"  Width="83" Height="25" Click="PickCameraButton_Click" Tag="operatorLock" IsEnabled="False" />
+        <Button Name="controlButton" Content="Take Control" HorizontalAlignment="Left" Margin="225,0,0,61" VerticalAlignment="Bottom" Width="117" Height="25" Click="controlButton_Click" IsEnabled="False" Tag="operatorLock"/>
+        <Button x:Name="clearDrawingBtn" Content="Clear drawing" HorizontalAlignment="Right" Margin="0,0,98,61" VerticalAlignment="Bottom"  Width="83" Height="25" Tag="operatorLock" IsEnabled="False" Click="clearDrawingBtn_Click" />
+
+
+
+    </Grid>
+</platformclient:ViewItemWpfUserControl>

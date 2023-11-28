@@ -1,0 +1,241 @@
+﻿@page
+@model InSupport.O3C.API.Pages.IndexModel
+@{
+
+    ViewData["Title"] = "Servers";
+}
+
+@section Head
+{
+    <style>
+        .toast {
+            max-width: 500px;
+            min-width: 300px;
+        }
+    </style>
+}
+
+<h1>Servers at a glance</h1>
+
+<div class="table-responsive">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>External Host</th>
+                <th>Host</th>
+                <th>Admin port</th>
+                <th>Client port</th>
+                <th>Status</th>
+                <th>Cluster</th>
+                <th>Loadbalancing</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var server in Model.DeviceContext.Servers.ToList())
+            {
+                <tr>
+                    <td o3c-name>
+                        @server.Name
+                    </td>
+                    <td>
+                        <span o3c-externalHost>@(server.ExternalHost ?? "N/A")</span> <a href="#" class="setServerExternalHostLink">(Edit)</a>
+                    </td>
+                    <td>
+                        <span o3c-host>@server.Host</span> <a href="#" class="setServerHostLink">(Edit)</a>
+                    </td>
+                    <td>
+                        <span o3c-adminPort>@server.AdminPort</span> <a href="#" class="setServerAdminPortLink">(Edit)</a>
+                    </td>
+                    <td>
+                        <span o3c-clientPort>@server.ClientPort</span> <a href="#" class="setServerClientPortLink">(Edit)</a>
+                    </td>
+                    <td>
+                        @(server.IsUp ? "Up" : "Down")
+                    </td>
+                    <td>
+                        <span o3c-clusterId>@server.ClusterId</span> <a href="#" class="setServerClusterIdLink">(Edit)</a>
+                    </td>
+                    <td>
+                        <div class="form-check">
+                            <input o3c-useLoadBalance class="form-check-input" type="checkbox" value="" @(server.ApplyLoadBalancing ? "checked" : "")>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="toastContainer" style="position: absolute; top: 1rem; right: 1rem;">
+    <div id="toastTemplate" class="toast hide" data-autohide="true" data-delay="3000" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <svg class="rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" role="img" aria-label=" :  " preserveAspectRatio="xMidYMid slice" focusable="false"><title> </title><rect width="100%" height="100%" fill="#28a745"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em"> </text></svg>
+            <strong class="mr-auto"></strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+
+            $(".setServerExternalHostLink").click(function () {
+
+                var parent = $(this).parents().eq(1);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+                var currentHost = parent.find("[o3c-externalHost]").text();
+
+                if (currentHost == "N/A")
+                    currentHost = "";
+
+                var newHost = prompt(`Enter new ExternalHost for server ${o3cServerName}`, currentHost);
+
+                if (newHost == "")
+                    newHost = "NULL";
+
+                if (newHost != null && newHost != currentHost) {
+                    setServerExternalHost(o3cServerName, newHost);
+                    parent.find("[o3c-externalHost]").text(newHost == "NULL" ? "N/A" : newHost);
+
+                    spawnToast(`${o3cServerName} saved!`, `ExternalHost = ${newHost}`);
+                }
+            });
+
+            $(".setServerHostLink").click(function () {
+
+                var parent = $(this).parents().eq(1);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+                var currentHost = parent.find("[o3c-host]").text();
+
+                var newHost = prompt(`Enter new Host for server ${o3cServerName}`, currentHost);
+
+                if (newHost != null && newHost != currentHost) {
+                    setServerHost(o3cServerName, newHost);
+                    parent.find("[o3c-host]").text(newHost);
+
+                    spawnToast(`${o3cServerName} saved!`, `Host = ${newHost}`);
+                }
+            });
+
+            $("input[o3c-useLoadBalance]").change(function () {
+
+                var parent = $(this).parents().eq(2);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+
+                setLoadBalance(o3cServerName, this.checked);
+
+                spawnToast(`${o3cServerName} saved!`, `ApplyLoadBalancing = ${this.checked}`);
+            });
+
+            $(".setServerClusterIdLink").click(function () {
+
+                var parent = $(this).parents().eq(1);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+                var currentClusterId = parseInt(parent.find("[o3c-clusterId]").text());
+
+                var newClusterId = prompt(`Enter new ClusterId for server ${o3cServerName}`, currentClusterId);
+
+                if (newClusterId != null && newClusterId != currentClusterId) {
+                    setServerClusterId(o3cServerName, newClusterId);
+                    parent.find("[o3c-clusterId]").text(newClusterId);
+
+                    spawnToast(`${o3cServerName} saved!`, `ClusterId = ${newClusterId}`);
+                }
+            });
+
+
+            $(".setServerAdminPortLink").click(function () {
+
+                var parent = $(this).parents().eq(1);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+                var currentPort = parseInt(parent.find("[o3c-adminPort]").text());
+
+                var newPort = prompt(`Enter new AdminPort for server ${o3cServerName}`, currentPort);
+
+                if (newPort != null && newPort != currentPort) {
+                    setServerAdminPort(o3cServerName, newPort);
+                    parent.find("[o3c-adminPort]").text(newPort);
+
+                    spawnToast(`${o3cServerName} saved!`, `AdminPort = ${newPort}`);
+                }
+            });
+
+            $(".setServerClientPortLink").click(function () {
+
+                var parent = $(this).parents().eq(1);
+                var o3cServerName = parent.find("[o3c-name]").text().trim();
+                var currentPort = parseInt(parent.find("[o3c-clientPort]").text());
+
+                var newPort = prompt(`Enter new ClientPort for server ${o3cServerName}`, currentPort);
+
+                if (newPort != null && newPort != currentPort) {
+                    setServerClientPort(o3cServerName, newPort);
+                    parent.find("[o3c-clientPort]").text(newPort);
+
+                    spawnToast(`${o3cServerName} saved!`, `ClientPort = ${newPort}`);
+                }
+            });
+        });
+
+        function setServerExternalHost(serverName, host) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setExternalHost/${host}`
+            });
+        }
+
+        function setServerHost(serverName, host) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setHost/${host}`
+            });
+        }
+
+        function setLoadBalance(serverName, value) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setLoadBalance/${value}`
+            });
+        }
+
+        function setServerClusterId(serverName, clusterId) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setClusterId/${clusterId}`
+            });
+        }
+
+        function setServerAdminPort(serverName, adminPort) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setAdminPort/${adminPort}`
+            });
+        }
+
+        function setServerClientPort(serverName, clientPort) {
+            $.ajax({
+                type: "PUT",
+                url: `/api/server/${serverName}/setClientPort/${clientPort}`
+            });
+        }
+
+        function spawnToast(header, body) {
+            var $toast = $("#toastTemplate").clone().removeClass("hide").appendTo("#toastContainer");
+            $toast.find(".toast-header strong").html(header);
+            $toast.find(".toast-body").html(body);
+            $toast.on('hidden.bs.toast', function () {
+                this.remove();
+            });
+            $toast.toast('show');
+        }
+    </script>
+
+}

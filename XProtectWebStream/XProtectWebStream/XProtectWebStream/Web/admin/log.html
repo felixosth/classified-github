@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/dark-mode.css" rel="stylesheet" />
+
+    <title>Log - TryggSHARE</title>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <h2>The Logbook</h2>
+        
+        <div class="input-group">
+            <select class="form-select" id="log-select" data-theme="dark">
+                <option selected value="createdtokens">Created tokens</option>
+                <option value="webaccess">Web access</option>
+                <option value="bankidlogins">BankID logins</option>
+            </select>
+
+            <button class="btn btn-outline-secondary" type="button" id="refresh-btn">Refresh</button>
+        </div>
+
+
+        <table class="table" id="log-table">
+        </table>
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        var table = null;
+        $(document).ready(function () {
+            table = document.getElementById("log-table");
+
+            $("#log-select").change(refreshLog);
+            $("#refresh-btn").click(refreshLog);
+
+            refreshLog();
+        });
+
+        function refreshLog() {
+
+            $("#refresh-btn").prop("disabled", true);
+            $.get("/api?action=getLog&log=" + $("#log-select").val(), function (logEntries) {
+
+                table.innerHTML = "";
+                var setupHead = true;
+
+                var thead = table.createTHead();
+                var tableBody = table.createTBody();
+
+                logEntries.forEach(function (entry) {
+
+                    var propNames = Object.getOwnPropertyNames(entry);
+
+                    if (setupHead) {
+                        setupHead = false;
+
+                        var row = thead.insertRow();
+
+                        propNames.forEach(function (propName) {
+                            row.insertCell().innerHTML = "<b>" + propName + "</b>";
+                        });
+                    }
+
+                    var row = tableBody.insertRow();
+
+                    propNames.forEach(function (propName) {
+                        row.insertCell().innerText = entry[propName];
+                    });
+
+                });
+                $("#refresh-btn").prop("disabled", false);
+
+            });
+        }
+    </script>
+</body>
+</html>

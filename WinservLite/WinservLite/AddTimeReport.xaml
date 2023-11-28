@@ -1,0 +1,51 @@
+﻿<Window x:Class="WinservLite.AddTimeReport"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinservLite"
+        mc:Ignorable="d"
+        Title="Add time report" Height="286.267" Width="300" WindowStartupLocation="CenterOwner" Icon="rocket big.ico" KeyUp="Window_KeyUp" Closing="Window_Closing">
+    <Grid >
+        <Button  Content="Save" HorizontalAlignment="Right" Margin="0,0,90,9" VerticalAlignment="Bottom" Width="75" Click="Button_Click" TabIndex="8"/>
+
+
+        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="117,0,0,73" FirstDayOfWeek="Monday" IsTodayHighlighted="True" Text="Välj" SelectedDateFormat="Long" Height="24" VerticalAlignment="Bottom" TabIndex="4"/>
+        <ComboBox  x:Name="jobType" Margin="10,0,0,73" SelectedIndex="0" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Bottom" TabIndex="3">
+            <ListBoxItem Content="Installation"/>
+            <ListBoxItem Content="Service"/>
+            <ListBoxItem Content="Fjärrsupport"/>
+            <ListBoxItem Content="Driftsättning"/>
+            <ListBoxItem Content="Projektering"/>
+            <ListBoxItem Content="Utbildning"/>
+        </ComboBox>
+        <TextBox GotKeyboardFocus="timeBoxes_GotFocus" PreviewMouseDown="workBox_PreviewMouseDown" KeyDown="timeBoxes_KeyDown" x:Name="workBox" HorizontalAlignment="Left" Margin="53,0,0,41" TextWrapping="Wrap" Text="0" Width="59" Height="23" VerticalAlignment="Bottom" TabIndex="5">
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Finish day" x:Name="finishDayMenuItem" Click="FinishDayMenuItem_Click"/>
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
+        <Label Content="Arbtid" HorizontalAlignment="Left" Margin="10,0,0,42" Height="26" VerticalAlignment="Bottom"/>
+        <TextBox GotKeyboardFocus="timeBoxes_GotFocus" PreviewMouseDown="workBox_PreviewMouseDown" KeyDown="timeBoxes_KeyDown" x:Name="travelBox" HorizontalAlignment="Left" Margin="160,0,0,41" TextWrapping="Wrap" Text="0" Width="59" Height="23" VerticalAlignment="Bottom" TabIndex="6"/>
+        <Label Content="Restid" HorizontalAlignment="Left" Margin="117,0,0,42" Height="26" VerticalAlignment="Bottom"/>
+        <Label Content="Comment:" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top"/>
+        <Button  x:Name="cancelBtn" Content="Cancel" Margin="0,0,10,9" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="cancelBtn_Click" TabIndex="9"/>
+        <ComboBox  x:Name="techBox" HorizontalAlignment="Left" Margin="80,14,0,0" VerticalAlignment="Top" Width="87" TabIndex="1">
+            <ListBoxItem Content="DEAH"/>
+            <ListBoxItem Content="FEOS"/>
+            <ListBoxItem Content="JELO"/>
+            <ListBoxItem Content="KRHE"/>
+            <ListBoxItem Content="LIOL"/>
+            <ListBoxItem Content="MATO"/>
+            <ListBoxItem Content="VIKLA"/>
+        </ComboBox>
+        <Label Content="Technician:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Grid Margin="10,68,10,102">
+            <TextBox x:Name="commentBox" TextWrapping="Wrap" TabIndex="2" MaxLength="100" KeyDown="commentBox_KeyDown" TextChanged="commentBox_TextChanged"/>
+            <Label IsHitTestVisible="False" x:Name="maxCharsLabel" Content="0/100" HorizontalAlignment="Left" Foreground="#FFA6A1A1" FontSize="9" Height="20" VerticalAlignment="Bottom"/>
+        </Grid>
+        <CheckBox  x:Name="traktChkBox" Content="Traktamente" HorizontalAlignment="Left" Margin="10,0,0,22" VerticalAlignment="Bottom" TabIndex="7"/>
+
+    </Grid>
+</Window>
